@@ -63,5 +63,11 @@ dependencies {
     implementation 'me.xdrop:fuzzywuzzy:1.4.0'
 
 
+//    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+//    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    implementation 'me.xdrop:fuzzywuzzy:1.4.0'
+
+//    implementation 'androidx.core:core-ktx:1.9.0'
 }
 
