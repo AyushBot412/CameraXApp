@@ -14,6 +14,7 @@ import java.util.Map;
 
 // TODO: Settle on text processing
 // TODO: Or use image classification model
+
 public class TextRecognitionManager {
     public static void runTextRecognition(InputImage image) {
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);

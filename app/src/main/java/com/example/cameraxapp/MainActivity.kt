@@ -30,6 +30,11 @@ import java.nio.ByteBuffer
 typealias LumaListener = (luma: Double) -> Unit
 
     // TODO: add focusing and zooming capability
+    //TODO: Implement failed text recognition - check email Dr. Lin cc wth Lauren
+    //TODO: Implement NDC
+    //TODO: createMap()
+    // TODO: Settle on text processing
+    // TODO: Or use image classification model
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
