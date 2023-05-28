@@ -29,6 +29,7 @@ import java.nio.ByteBuffer
 
 typealias LumaListener = (luma: Double) -> Unit
 
+    // TODO: add focusing and zooming capability
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
