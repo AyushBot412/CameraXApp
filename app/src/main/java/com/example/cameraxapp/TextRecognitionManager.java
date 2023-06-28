@@ -1,5 +1,7 @@
 package com.example.cameraxapp;
 
+
+
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -16,14 +18,43 @@ import java.util.Map;
 // TODO: Or use image classification model
 
 public class TextRecognitionManager {
-    public static void runTextRecognition(InputImage image) {
+    private static String identifiedWord = "";
+    public static String runTextRecognition(InputImage image) {
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
+
+        //TODO maybe need to add a loading beach ball?
         System.out.println("Extracting words");
 
+
         recognizer.process(image)
-                .addOnSuccessListener(visionText -> System.out.println("Vision text" + visionText.getText()))
+                .addOnSuccessListener(visionText -> identifiedWord = visionText.getText())
                 .addOnFailureListener(exception -> System.out.println(exception));
+        //TODO figure out what to do with a failure
+
+//        Task<Text> oldTask = recognizer.process(image);
+//
+//        oldTask.addOnCompleteListener(new OnCompleteListener<Text>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Text> task) {
+//                if (task.isSuccessful()) {
+//                    // Task completed successfully
+//                    Text text = task.getResult();
+//                    String words = text.getText();
+//                } else {
+//                    // Task failed with an exception
+//                    Exception exception = task.getException();
+//
+//                }
+//            }
+//        });
+//
+//        Text newText = recognizer.process(image).getResult();
+//        String completedText = newText.getText();
+
+        recognizer.close();
+        return identifiedWord;
+
 
     }
     private static List<String> processTextRecognitionResult(Text texts) {

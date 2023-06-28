@@ -35,7 +35,7 @@ public class TextRecognitionTest extends AppCompatActivity {
 
                 InputImage im = InputImage.fromBitmap(bitmap, 0);
                 processor.processImage(im);
-//                System.out.println("Classified Bottle Type " + processor.text);
+                System.out.println("Classified Bottle Type " + processor.getText());
             }
         } catch (IOException e) {
             e.printStackTrace();

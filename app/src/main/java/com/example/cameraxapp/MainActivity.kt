@@ -1,38 +1,32 @@
 package com.example.cameraxapp
 
+
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.ImageCapture
-import androidx.camera.video.Recorder
-import androidx.camera.video.Recording
-import androidx.camera.video.VideoCapture
+import androidx.camera.core.*
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-//import com.android.example.cameraxapp.databinding.ActivityMainBinding
+import com.example.cameraxapp.databinding.ActivityMainBinding
+import com.google.mlkit.vision.common.InputImage
+import java.nio.ByteBuffer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import android.widget.Toast
-import androidx.camera.lifecycle.ProcessCameraProvider
-import com.example.cameraxapp.databinding.ActivityMainBinding
-import androidx.camera.core.Preview
-import androidx.camera.core.CameraSelector
-import android.util.Log
-import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageProxy
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import java.nio.ByteBuffer
 
 
 typealias LumaListener = (luma: Double) -> Unit
+typealias TextListener = (text: String) -> Unit
 
     // TODO: add focusing and zooming capability
-    //TODO: Implement failed text recognition - check email Dr. Lin cc wth Lauren
-    //TODO: Implement NDC
-    //TODO: createMap()
+    // TODO: Implement NDC
+    // TODO: createMap()
     // TODO: Settle on text processing
     // TODO: Or use image classification model
 
@@ -41,26 +35,46 @@ class MainActivity : AppCompatActivity() {
 
     private var imageCapture: ImageCapture? = null
 
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
-
     private lateinit var cameraExecutor: ExecutorService
-    val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+    private var identifiedWord: String = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        // Request camera permissions
+     //Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
+            updateTextView()
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+
+    }
+
+
+    private class YourImageAnalyzer(private val listener: TextListener) : ImageAnalysis.Analyzer {
+
+        override fun analyze(imageProxy: ImageProxy) {
+            val mediaImage = imageProxy.image
+            if (mediaImage != null) {
+                val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                val processor = FrameProcessor()
+                processor.processImage(image)
+
+
+                val name = processor.getText()
+                listener(name)
+            }
+            imageProxy.close()
+        }
     }
     private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
 
@@ -84,7 +98,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -101,16 +114,26 @@ class MainActivity : AppCompatActivity() {
 
             imageCapture = ImageCapture.Builder().build() // For Capturing Images
 
-            val imageAnalyzer = ImageAnalysis.Builder()
+//            val imageAnalyzer = ImageAnalysis.Builder()
+//                .build()
+//                .also {
+//                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
+//                        Log.d(TAG, "Average luminosity: $luma")
+//                    })
+//                } // Analyzes Images
+
+            val correctImageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                        Log.d(TAG, "Average luminosity: $luma")
+                    it.setAnalyzer(cameraExecutor, YourImageAnalyzer { text ->
+                        identifiedWord = text
                     })
-                } // Analyzes Images
+                } // Correctly Analyzes Images to spit out text
 
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+
 
             try {
                 // Unbind use cases before rebinding
@@ -118,13 +141,25 @@ class MainActivity : AppCompatActivity() {
 
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
+                    this, cameraSelector, preview, imageCapture, correctImageAnalyzer)
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
             }
 
         }, ContextCompat.getMainExecutor(this))
+    }
+
+
+    private fun updateTextView() {
+
+        val changedTextView = findViewById<View>(R.id.text_view_id2) as TextView
+        changedTextView.setText(R.string.TestChange)
+
+//        val textView = findViewById<TextView>(R.id.text_view_id)
+//        textView.setText(identifiedWord).toString()
+//        val textViewValue = textView.text
+
     }
     /*
     private fun takePhoto() {
