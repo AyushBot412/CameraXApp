@@ -61,12 +61,12 @@ class MainActivity : AppCompatActivity() {
 
 
     private class YourImageAnalyzer(private val listener: TextListener) : ImageAnalysis.Analyzer {
+        val processor = FrameProcessor()
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
             if (mediaImage != null) {
                 val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                val processor = FrameProcessor()
                 processor.processImage(image)
 
 

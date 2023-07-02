@@ -4,10 +4,16 @@ import com.google.mlkit.vision.common.InputImage;
 
 public class FrameProcessor {
     public String text;
+    public boolean isClassifying = false;
 
     void processImage(InputImage image) {
-        String word = TextRecognitionManager.runTextRecognition(image);
-        setText(word);
+        if (!isClassifying) {
+            isClassifying = true;
+            String word = TextRecognitionManager.extractWords(image);
+            setText(word);
+            isClassifying = false;
+        }
+
 
     }
 

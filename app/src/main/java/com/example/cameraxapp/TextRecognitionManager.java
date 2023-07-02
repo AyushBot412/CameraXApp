@@ -18,8 +18,8 @@ import java.util.Map;
 // TODO: Or use image classification model
 
 public class TextRecognitionManager {
-    private static String identifiedWord = "";
-    public static String runTextRecognition(InputImage image) {
+    private static String test = "test";
+    public static String extractWords(InputImage image) {
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
 
@@ -28,7 +28,7 @@ public class TextRecognitionManager {
 
 
         recognizer.process(image)
-                .addOnSuccessListener(visionText -> identifiedWord = visionText.getText())
+                .addOnSuccessListener(visionText -> System.out.println(visionText))
                 .addOnFailureListener(exception -> System.out.println(exception));
         //TODO figure out what to do with a failure
 
@@ -53,7 +53,7 @@ public class TextRecognitionManager {
 //        String completedText = newText.getText();
 
         recognizer.close();
-        return identifiedWord;
+        return test;
 
 
     }
