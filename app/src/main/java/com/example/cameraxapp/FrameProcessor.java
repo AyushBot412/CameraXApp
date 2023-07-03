@@ -2,19 +2,25 @@ package com.example.cameraxapp;
 
 import com.google.mlkit.vision.common.InputImage;
 
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import com.google.mlkit.vision.text.Text;
+
 public class FrameProcessor {
-    public String text;
+    public String text = "text";
     public boolean isClassifying = false;
 
-    void processImage(InputImage image) {
+    void processVisionText(Text visionText) {
         if (!isClassifying) {
             isClassifying = true;
-            String word = TextRecognitionManager.extractWords(image);
-            setText(word);
+            System.out.println("Classifying\n");
+            List<String> words = TextRecognitionManager.processTextRecognitionResult(visionText);
+            System.out.println(words);
+            Constants.BottleType classifiedBottleType = getBottleType(words);
+            System.out.println("Classified Bottle Type " + classifiedBottleType);
             isClassifying = false;
         }
-
-
     }
 
     public void setText(String newText) {
@@ -24,6 +30,38 @@ public class FrameProcessor {
 
     public String getText() {
         return text;
+    }
+
+    public static Constants.BottleType getBottleType(List<String> words) {
+        Constants.BottleType classifiedBottleType;
+
+        EnumMap<Constants.BottleType, LabelRecognitionManager.HelperType> matches = LabelRecognitionManager.getRecognitionMap(words);
+        Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> exactMatch = null;
+
+        for (Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> match : matches.entrySet()) {
+            LabelRecognitionManager.HelperType value = match.getValue();
+            if (exactMatch == null || value.score > exactMatch.getValue().score) {
+                exactMatch = match;
+            }
+        }
+
+        if (exactMatch != null) {
+            classifiedBottleType = exactMatch.getKey();
+        } else {
+            EnumMap<Constants.BottleType, LabelRecognitionManager.HelperType> fuzzyMatches = LabelRecognitionManager.getFuzzyRecognitionMap(words);
+            Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> fuzzyMatch = null;
+
+            for (Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> match : fuzzyMatches.entrySet()) {
+                LabelRecognitionManager.HelperType value = match.getValue();
+                if (fuzzyMatch == null || value.score > fuzzyMatch.getValue().score) {
+                    fuzzyMatch = match;
+                }
+            }
+
+            classifiedBottleType = fuzzyMatch.getKey();
+        }
+
+        return classifiedBottleType;
     }
 
 

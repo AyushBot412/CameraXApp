@@ -19,6 +19,10 @@ import com.google.mlkit.vision.common.InputImage
 import java.nio.ByteBuffer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import com.google.mlkit.vision.text.Text;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 
 typealias LumaListener = (luma: Double) -> Unit
@@ -56,25 +60,41 @@ class MainActivity : AppCompatActivity() {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-
+        BottleDictionary.initialize()
     }
 
 
     private class YourImageAnalyzer(private val listener: TextListener) : ImageAnalysis.Analyzer {
-        val processor = FrameProcessor()
+        val processor: FrameProcessor = FrameProcessor()
+        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
+
             if (mediaImage != null) {
-                val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                processor.processImage(image)
 
-
-                val name = processor.getText()
-                listener(name)
+                val image = InputImage.fromMediaImage(mediaImage, 0)
+                val result = recognizer.process(image)
+                    .addOnSuccessListener { visionText ->
+                        val name = processor.processVisionText(visionText)
+                    }
+                    .addOnFailureListener { e ->
+                        System.out.println(e)
+                    }
+                    .addOnCompleteListener {
+                        imageProxy.close()
+                    }
+//
+//                val image = InputImage.fromMediaImage(mediaImage, 0)
+//
+//                processor.processImage(image)
+//
+//                val name = processor.getText()
+//                listener(name)
             }
             imageProxy.close()
         }
+
     }
     private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
 

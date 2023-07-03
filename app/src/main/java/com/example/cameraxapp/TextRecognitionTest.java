@@ -29,13 +29,13 @@ public class TextRecognitionTest extends AppCompatActivity {
             FrameProcessor processor = new FrameProcessor();
 
             for (int i = rangeMin; i <= rangeMax; i++) {
-                InputStream istr = assetManager.open("IMG_" + i + ".png");
+                InputStream istr = assetManager.open("Images/IMG_" + i + ".png");
                 Bitmap bitmap = BitmapFactory.decodeStream(istr);
                 istr.close();
 
                 InputImage im = InputImage.fromBitmap(bitmap, 0);
-                processor.processImage(im);
-                System.out.println("Classified Bottle Type " + processor.getText());
+//                processor.processImage(im);
+//                System.out.println("Classified Bottle Type " + processor.getText());
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,6 +2,11 @@ package com.example.cameraxapp;
 
 
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -18,46 +23,25 @@ import java.util.Map;
 // TODO: Or use image classification model
 
 public class TextRecognitionManager {
-    private static String test = "test";
-    public static String extractWords(InputImage image) {
-        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
-
-        //TODO maybe need to add a loading beach ball?
-        System.out.println("Extracting words");
-
-
-        recognizer.process(image)
-                .addOnSuccessListener(visionText -> System.out.println(visionText))
-                .addOnFailureListener(exception -> System.out.println(exception));
-        //TODO figure out what to do with a failure
-
-//        Task<Text> oldTask = recognizer.process(image);
+//    public static List<String> extractWords(InputImage image) {
+//        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 //
-//        oldTask.addOnCompleteListener(new OnCompleteListener<Text>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Text> task) {
-//                if (task.isSuccessful()) {
-//                    // Task completed successfully
-//                    Text text = task.getResult();
-//                    String words = text.getText();
-//                } else {
-//                    // Task failed with an exception
-//                    Exception exception = task.getException();
 //
-//                }
-//            }
-//        });
+//        //TODO maybe need to add a loading beach ball?
+//        System.out.println("Extracting words");
 //
-//        Text newText = recognizer.process(image).getResult();
-//        String completedText = newText.getText();
-
-        recognizer.close();
-        return test;
-
-
-    }
-    private static List<String> processTextRecognitionResult(Text texts) {
+//        recognizer.process(image)
+//                        .addOnSuccessListener(visionText -> {
+//                            System.out.println("Vision Text " + visionText.getText());
+//                            System.out.println("processTextRecognitionResult " + processTextRecognitionResult(visionText));
+////                            words = processTextRecognitionResult(visionText);
+//                        })
+//                        .addOnFailureListener(
+//                                e -> System.out.println(e));
+//        return null;
+//    }
+    public static List<String> processTextRecognitionResult(Text texts) {
         List<Text.TextBlock> blocks = texts.getTextBlocks();
         List<String> words = new ArrayList<>();
 
@@ -75,41 +59,4 @@ public class TextRecognitionManager {
         }
         return words;
     }
-
-    private static Constants.BottleType getBottleType(List<String> words) {
-        Constants.BottleType classifiedBottleType;
-
-        EnumMap<Constants.BottleType, LabelRecognitionManager.HelperType> matches = LabelRecognitionManager.getRecognitionMap(words);
-        Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> exactMatch = null;
-
-        for (Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> match : matches.entrySet()) {
-            LabelRecognitionManager.HelperType value = match.getValue();
-            if (exactMatch == null || value.score > exactMatch.getValue().score) {
-                exactMatch = match;
-            }
-        }
-
-        if (exactMatch != null) {
-            classifiedBottleType = exactMatch.getKey();
-        } else {
-            EnumMap<Constants.BottleType, LabelRecognitionManager.HelperType> fuzzyMatches = LabelRecognitionManager.getFuzzyRecognitionMap(words);
-            Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> fuzzyMatch = null;
-
-            for (Map.Entry<Constants.BottleType, LabelRecognitionManager.HelperType> match : fuzzyMatches.entrySet()) {
-                LabelRecognitionManager.HelperType value = match.getValue();
-                if (fuzzyMatch == null || value.score > fuzzyMatch.getValue().score) {
-                    fuzzyMatch = match;
-                }
-            }
-
-            classifiedBottleType = fuzzyMatch.getKey();
-        }
-
-
-        System.out.println("Classified Bottle Type " + classifiedBottleType);
-
-        return classifiedBottleType;
-    }
-
-
 }
