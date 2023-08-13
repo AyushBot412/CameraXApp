@@ -1,8 +1,6 @@
 package com.example.cameraxapp;
 
-//TODO: Implement failed text recognition - check email Dr. Lin cc wth Lauren
 //TODO: Implement NDC
-//TODO: createMap()
 
 public final class Constants {
     private Constants() {
@@ -19,7 +17,9 @@ public final class Constants {
         RHOPRESSA,
         ROCKLATAN,
         VIGAMOX,
-        VIGAMOX_OFF_BRAND;
+        VIGAMOX_OFF_BRAND,
+
+        NULL;
 
         boolean isEqual(BottleType type) {
             switch (this) {
@@ -42,6 +42,8 @@ public final class Constants {
                 case VIGAMOX:
                 case VIGAMOX_OFF_BRAND:
                     return type == BottleType.VIGAMOX;
+                case NULL:
+                    return type == BottleType.NULL;
             }
             return false;
         }
@@ -55,7 +57,8 @@ public final class Constants {
         PREDFORTE,
         RHOPRESSA,
         ROCKLATAN,
-        VIGAMOX
+        VIGAMOX,
+        NULL
 
     }
 }

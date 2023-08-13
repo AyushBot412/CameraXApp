@@ -30,9 +30,7 @@ typealias TextListener = (text: String) -> Unit
 
     // TODO: add focusing and zooming capability
     // TODO: Implement NDC
-    // TODO: createMap()
-    // TODO: Settle on text processing
-    // TODO: Or use image classification model
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -52,7 +50,7 @@ class MainActivity : AppCompatActivity() {
      //Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
-            updateTextView()
+
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
@@ -64,26 +62,50 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
     private class YourImageAnalyzer(private val listener: TextListener) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
+
+
+
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
+            var name = "";
+
+
+
 
             if (mediaImage != null) {
+
 
                 val image = InputImage.fromMediaImage(mediaImage, 0)
                 val result = recognizer.process(image)
                     .addOnSuccessListener { visionText ->
-                        val name = processor.processVisionText(visionText)
+                        name = processor.processVisionText(visionText)
+
+                        if (name != "No Bottle Type Found." ) {
+                            println("Bottle Found: $name")
+
+                        } else if (name.isEmpty() || name == "No Bottle Type Found.") {
+                        }
+
+
                     }
                     .addOnFailureListener { e ->
-                        System.out.println(e)
+                        //System.out.println(e)
                     }
                     .addOnCompleteListener {
                         imageProxy.close()
+
                     }
+
+
+                if (name != "") {
+                    println("hello test 1")
+                }
+
 //
 //                val image = InputImage.fromMediaImage(mediaImage, 0)
 //
@@ -92,7 +114,8 @@ class MainActivity : AppCompatActivity() {
 //                val name = processor.getText()
 //                listener(name)
             }
-            imageProxy.close()
+
+            //imageProxy.close()
         }
 
     }
@@ -119,6 +142,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
+
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
@@ -147,8 +171,12 @@ class MainActivity : AppCompatActivity() {
                 .also {
                     it.setAnalyzer(cameraExecutor, YourImageAnalyzer { text ->
                         identifiedWord = text
+
                     })
                 } // Correctly Analyzes Images to spit out text
+
+
+
 
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -181,50 +209,6 @@ class MainActivity : AppCompatActivity() {
 //        val textViewValue = textView.text
 
     }
-    /*
-    private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-                }
-            }
-        )
-    }
-
-     */
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
@@ -251,7 +235,6 @@ class MainActivity : AppCompatActivity() {
     }
     companion object {
         private const val TAG = "CameraXApp"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS =
             mutableListOf (

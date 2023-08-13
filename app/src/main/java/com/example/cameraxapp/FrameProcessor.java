@@ -11,16 +11,24 @@ public class FrameProcessor {
     public String text = "text";
     public boolean isClassifying = false;
 
-    void processVisionText(Text visionText) {
+    String processVisionText(Text visionText) {
         if (!isClassifying) {
             isClassifying = true;
             System.out.println("Classifying\n");
             List<String> words = TextRecognitionManager.processTextRecognitionResult(visionText);
             System.out.println(words);
             Constants.BottleType classifiedBottleType = getBottleType(words);
-            System.out.println("Classified Bottle Type " + classifiedBottleType);
-            isClassifying = false;
+            if (classifiedBottleType != Constants.BottleType.NULL) {
+                System.out.println("Classified Bottle Type " + classifiedBottleType);
+                isClassifying = false;
+                return classifiedBottleType.toString();
+            } else {
+                System.out.println("No Bottle Type Found.");
+                isClassifying = false;
+                return "No Bottle Type Found.";
+            }
         }
+        return "";
     }
 
     public void setText(String newText) {
@@ -58,7 +66,11 @@ public class FrameProcessor {
                 }
             }
 
-            classifiedBottleType = fuzzyMatch.getKey();
+            if (fuzzyMatch == null) {
+                classifiedBottleType = Constants.BottleType.NULL;
+            } else {
+                classifiedBottleType = fuzzyMatch.getKey();
+            }
         }
 
         return classifiedBottleType;

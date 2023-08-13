@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 
-// TODO: Settle on text processing
-// TODO: Or use image classification model
+
 
 public class TextRecognitionManager {
 
@@ -28,7 +27,7 @@ public class TextRecognitionManager {
 //        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 //
 //
-//        //TODO maybe need to add a loading beach ball?
+//        //TODO maybe need to add a throbber/progress bar?
 //        System.out.println("Extracting words");
 //
 //        recognizer.process(image)
