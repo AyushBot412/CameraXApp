@@ -19,14 +19,14 @@ import com.google.mlkit.vision.common.InputImage
 import java.nio.ByteBuffer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import com.google.mlkit.vision.text.Text;
-import com.google.mlkit.vision.text.TextRecognition;
-import com.google.mlkit.vision.text.TextRecognizer;
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+import com.google.mlkit.vision.text.Text
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.TextRecognizer
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+//import kotlinx.android.synthetic.main.activity_main.text_view_id2
 
 
 typealias LumaListener = (luma: Double) -> Unit
-typealias TextListener = (text: String) -> Unit
 
     // TODO: add focusing and zooming capability
     // TODO: Implement NDC
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var cameraExecutor: ExecutorService
 
-    private var identifiedWord: String = ""
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,11 +59,12 @@ class MainActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         BottleDictionary.initialize()
+
     }
 
 
 
-    private class YourImageAnalyzer(private val listener: TextListener) : ImageAnalysis.Analyzer {
+    private class YourImageAnalyzer(private val displayText : TextView) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
@@ -73,9 +74,6 @@ class MainActivity : AppCompatActivity() {
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
             var name = "";
-
-
-
 
             if (mediaImage != null) {
 
@@ -87,9 +85,12 @@ class MainActivity : AppCompatActivity() {
 
                         if (name != "No Bottle Type Found." ) {
                             println("Bottle Found: $name")
+                            displayText.text = name
+                            //displayText.setText(name)
 
-                        } else if (name.isEmpty() || name == "No Bottle Type Found.") {
                         }
+//                        else if (name.isEmpty() || name == "No Bottle Type Found.") {
+//                        }
 
 
                     }
@@ -166,13 +167,13 @@ class MainActivity : AppCompatActivity() {
 //                    })
 //                } // Analyzes Images
 
+            val changedTextView = findViewById<View>(R.id.text_view_id2) as TextView
+
             val correctImageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, YourImageAnalyzer { text ->
-                        identifiedWord = text
-
-                    })
+                    it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView) )
+                    //{ text -> identifiedWord = text}
                 } // Correctly Analyzes Images to spit out text
 
 
@@ -203,10 +204,6 @@ class MainActivity : AppCompatActivity() {
 
         val changedTextView = findViewById<View>(R.id.text_view_id2) as TextView
         changedTextView.setText(R.string.TestChange)
-
-//        val textView = findViewById<TextView>(R.id.text_view_id)
-//        textView.setText(identifiedWord).toString()
-//        val textViewValue = textView.text
 
     }
 
