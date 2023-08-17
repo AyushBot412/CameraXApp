@@ -1,17 +1,23 @@
 package com.example.cameraxapp;
 
+import android.speech.tts.TextToSpeech;
+
 import com.google.mlkit.vision.common.InputImage;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import com.google.mlkit.vision.text.Text;
 
 public class FrameProcessor {
     public String text = "text";
     public boolean isClassifying = false;
+    TextToSpeech t1;
 
     String processVisionText(Text visionText) {
+
+
         if (!isClassifying) {
             isClassifying = true;
             System.out.println("Classifying\n");

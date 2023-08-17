@@ -1,10 +1,12 @@
 package com.example.cameraxapp
 
 
+//import kotlinx.android.synthetic.main.activity_main.text_view_id2
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -16,14 +18,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.cameraxapp.databinding.ActivityMainBinding
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.nio.ByteBuffer
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import com.google.mlkit.vision.text.Text
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.TextRecognizer
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-//import kotlinx.android.synthetic.main.activity_main.text_view_id2
 
 
 typealias LumaListener = (luma: Double) -> Unit
@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var cameraExecutor: ExecutorService
 
+    private var t1: TextToSpeech? = null
+
+    private var previousMedicine : String = ""
+    private var currentMedicine : String = ""
 
 
 
@@ -47,7 +51,14 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-     //Request camera permissions
+
+        t1 = TextToSpeech(this) {
+            if (it != TextToSpeech.ERROR) {
+                t1?.language = Locale.ENGLISH
+            }
+        }
+
+        //Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
 
@@ -64,16 +75,18 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    private class YourImageAnalyzer(private val displayText : TextView) : ImageAnalysis.Analyzer {
+    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        val map = HashMap<String, Int>()
+
 
 
 
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
-            var name = "";
+            var name: String
 
             if (mediaImage != null) {
 
@@ -86,6 +99,14 @@ class MainActivity : AppCompatActivity() {
                         if (name != "No Bottle Type Found." ) {
                             println("Bottle Found: $name")
                             displayText.text = name
+
+                            currentMedicine = name
+                            if (currentMedicine != previousMedicine) {
+                                //t1?.speak(name, TextToSpeech.QUEUE_FLUSH, null)
+                            }
+                            previousMedicine = name
+
+
                             //displayText.setText(name)
 
                         }
@@ -94,29 +115,14 @@ class MainActivity : AppCompatActivity() {
 
 
                     }
-                    .addOnFailureListener { e ->
-                        //System.out.println(e)
-                    }
+                    .addOnFailureListener { e -> }
                     .addOnCompleteListener {
                         imageProxy.close()
-
                     }
 
 
-                if (name != "") {
-                    println("hello test 1")
-                }
-
-//
-//                val image = InputImage.fromMediaImage(mediaImage, 0)
-//
-//                processor.processImage(image)
-//
-//                val name = processor.getText()
-//                listener(name)
             }
 
-            //imageProxy.close()
         }
 
     }
@@ -172,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             val correctImageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView) )
+                    it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine) )
                     //{ text -> identifiedWord = text}
                 } // Correctly Analyzes Images to spit out text
 
@@ -199,13 +205,6 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-
-    private fun updateTextView() {
-
-        val changedTextView = findViewById<View>(R.id.text_view_id2) as TextView
-        changedTextView.setText(R.string.TestChange)
-
-    }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
