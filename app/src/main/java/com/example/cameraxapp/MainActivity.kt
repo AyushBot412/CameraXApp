@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-typealias LumaListener = (luma: Double) -> Unit
+//typealias LumaListener = (luma: Double) -> Unit
 
     // TODO: add focusing and zooming capability
     // TODO: Implement NDC
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         replaceFragment(CameraFragment())
-
+/*
 
         t1 = TextToSpeech(this) {
             if (it != TextToSpeech.ERROR) {
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        BottleDictionary.initialize()
+        BottleDictionary.initialize()*/
 
         // replacing fragment
         viewBinding.bottomNavigationView.setOnItemSelectedListener {
@@ -87,8 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
+/*
     private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -219,7 +218,6 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
-
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
@@ -243,10 +241,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     companion object {
-        private const val TAG = "CameraXApp"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS =
+        const val TAG = "CameraXApp"
+        const val REQUEST_CODE_PERMISSIONS = 10
+        val REQUIRED_PERMISSIONS =
             mutableListOf (
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO
@@ -255,7 +254,7 @@ class MainActivity : AppCompatActivity() {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
-    }
+    }*/
 
     private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
@@ -264,3 +263,4 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.commit()
     }
 }
+
