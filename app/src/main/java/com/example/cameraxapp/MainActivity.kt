@@ -16,6 +16,7 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.cameraxapp.databinding.ActivityMainBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+        replaceFragment(CameraFragment())
 
 
         t1 = TextToSpeech(this) {
@@ -71,6 +73,18 @@ class MainActivity : AppCompatActivity() {
 
         BottleDictionary.initialize()
 
+        // replacing fragment
+        viewBinding.bottomNavigationView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.camera -> replaceFragment(CameraFragment())
+                R.id.instructions -> replaceFragment(InstructionsFragment())
+
+                else ->{
+
+                }
+            }
+            true
+        }
     }
 
 
@@ -241,5 +255,12 @@ class MainActivity : AppCompatActivity() {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
+    }
+
+    private fun replaceFragment(fragment: Fragment){
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, fragment)
+        fragmentTransaction.commit()
     }
 }
