@@ -6,7 +6,8 @@
         android:layout_height="wrap_content"
         android:title=""
         android:id="@+id/camera"
-        android:icon="@drawable/camera_icon" />
+        android:icon="@drawable/camera_icon"
+        />
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
