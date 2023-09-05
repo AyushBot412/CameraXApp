@@ -64,5 +64,7 @@ dependencies {
 
     implementation 'me.xdrop:fuzzywuzzy:1.4.0'
 
+    implementation "com.google.mlkit:barcode-scanning:17.2.0"
+
 }
 

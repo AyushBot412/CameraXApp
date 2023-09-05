@@ -1,9 +1,12 @@
 package com.example.cameraxapp
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Message
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -22,12 +25,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.cameraxapp.databinding.ActivityMainBinding
 import com.example.cameraxapp.databinding.FragmentCameraBinding
+import com.google.mlkit.vision.barcode.BarcodeScanner
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.nio.ByteBuffer
 import java.util.HashMap
 import java.util.Locale
+import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -46,17 +54,12 @@ class CameraFragment : Fragment() {
     private var previousMedicine : String = ""
     private var currentMedicine : String = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         viewBinding =  FragmentCameraBinding.inflate(inflater, container, false)
-
 
         t1 = TextToSpeech(activity) {
             if (it != TextToSpeech.ERROR) {
@@ -82,28 +85,29 @@ class CameraFragment : Fragment() {
         return viewBinding.root
     }
 
-
-
-    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String) : ImageAnalysis.Analyzer {
+    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String, private val context: Context) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         val map = HashMap<String, Int>()
-
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
             var name: String
 
+            val options = BarcodeScannerOptions.Builder()
+                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                .build()
+
+            val scanner = BarcodeScanning.getClient()
+
             if (mediaImage != null) {
-
-
                 val image = InputImage.fromMediaImage(mediaImage, 0)
                 val result = recognizer.process(image)
                     .addOnSuccessListener { visionText ->
                         name = processor.processVisionText(visionText)
-
                         if (name != "No Bottle Type Found." ) {
-                            println("Bottle Found: $name")
+                            Log.w("Bottle Found:", name);
+                            //println("Bottle Found: $name")
                             displayText.text = name
 
                             currentMedicine = name
@@ -118,19 +122,44 @@ class CameraFragment : Fragment() {
                         }
 //                        else if (name.isEmpty() || name == "No Bottle Type Found.") {
 //                        }
-
-
                     }
-                    .addOnFailureListener { e -> }
+                    .addOnFailureListener { _ -> }
                     .addOnCompleteListener {
                         imageProxy.close()
                     }
 
 
+                // same as result but for scanning the barcodes
+                val resultScanner = scanner.process(image)
+                    .addOnSuccessListener { barcodes ->
+                        for (barcode in barcodes){
+                            Log.w("BarcodeScanningActivity", "rawvalue: ${barcode.rawValue}");
+                            Toast.makeText(context, "scanned successfully: ${barcode.rawValue}", Toast.LENGTH_SHORT).show();
+                            val bounds = barcode.boundingBox
+                            val corners = barcode.cornerPoints
+                            val rawValue = barcode.rawValue
+                            val valueType = barcode.valueType
+
+                            when(valueType){
+                                Barcode.TYPE_WIFI ->{
+                                    val ssid = barcode.wifi!!.ssid
+                                    val password = barcode.wifi!!.password
+                                    val type = barcode.wifi!!.encryptionType
+                                }
+                                Barcode.TYPE_URL ->{
+                                    val title = barcode.url!!.title
+                                    val url = barcode.url!!.url
+                                }
+                            }
+
+                        }
+                    }
+                    .addOnFailureListener{
+                        Log.e("BarcodeScanningActivity", "Barcode scanning failed: $it")
+                    }
             }
 
         }
-
     }
     private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
 
@@ -186,14 +215,13 @@ class CameraFragment : Fragment() {
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine) )
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity()))
                         //{ text -> identifiedWord = text}
                     } // Correctly Analyzes Images to spit out text
 
 
                 // Select back camera as a default
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
 
 
                 try {
@@ -236,7 +264,6 @@ class CameraFragment : Fragment() {
             }
         }
     }
-
 
     companion object {
         private const val TAG = "CameraXApp"
