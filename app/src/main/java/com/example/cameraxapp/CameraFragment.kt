@@ -2,11 +2,9 @@ package com.example.cameraxapp
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -23,19 +21,13 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.cameraxapp.databinding.ActivityMainBinding
 import com.example.cameraxapp.databinding.FragmentCameraBinding
-import com.google.mlkit.vision.barcode.BarcodeScanner
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.nio.ByteBuffer
 import java.util.HashMap
 import java.util.Locale
-import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -93,72 +85,32 @@ class CameraFragment : Fragment() {
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
             var name: String
+            val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
+            val result = image?.let {
+                        recognizer.process(it)
+                            .addOnSuccessListener { visionText ->
+                                name = processor.processVisionText(visionText)
+                                if (name != "No Bottle Type Found.") {
+                                    Log.w("Bottle Found:", name)
+                                    //println("Bottle Found: $name")
+                                    displayText.text = name
 
-            val options = BarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                .build()
+                                    currentMedicine = name
+                                    if (currentMedicine != previousMedicine) {
+                                        //t1?.speak(name, TextToSpeech.QUEUE_FLUSH, null)
+                                    }
+                                    previousMedicine = name
+                                    //displayText.setText(name)
 
-            val scanner = BarcodeScanning.getClient()
-
-            if (mediaImage != null) {
-                val image = InputImage.fromMediaImage(mediaImage, 0)
-                val result = recognizer.process(image)
-                    .addOnSuccessListener { visionText ->
-                        name = processor.processVisionText(visionText)
-                        if (name != "No Bottle Type Found." ) {
-                            Log.w("Bottle Found:", name);
-                            //println("Bottle Found: $name")
-                            displayText.text = name
-
-                            currentMedicine = name
-                            if (currentMedicine != previousMedicine) {
-                                //t1?.speak(name, TextToSpeech.QUEUE_FLUSH, null)
-                            }
-                            previousMedicine = name
-
-
-                            //displayText.setText(name)
-
-                        }
-//                        else if (name.isEmpty() || name == "No Bottle Type Found.") {
-//                        }
-                    }
-                    .addOnFailureListener { _ -> }
-                    .addOnCompleteListener {
-                        imageProxy.close()
-                    }
-
-
-                // same as result but for scanning the barcodes
-                val resultScanner = scanner.process(image)
-                    .addOnSuccessListener { barcodes ->
-                        for (barcode in barcodes){
-                            Log.w("BarcodeScanningActivity", "rawvalue: ${barcode.rawValue}");
-                            Toast.makeText(context, "scanned successfully: ${barcode.rawValue}", Toast.LENGTH_SHORT).show();
-                            val bounds = barcode.boundingBox
-                            val corners = barcode.cornerPoints
-                            val rawValue = barcode.rawValue
-                            val valueType = barcode.valueType
-
-                            when(valueType){
-                                Barcode.TYPE_WIFI ->{
-                                    val ssid = barcode.wifi!!.ssid
-                                    val password = barcode.wifi!!.password
-                                    val type = barcode.wifi!!.encryptionType
                                 }
-                                Barcode.TYPE_URL ->{
-                                    val title = barcode.url!!.title
-                                    val url = barcode.url!!.url
-                                }
+                //                        else if (name.isEmpty() || name == "No Bottle Type Found.") {
+                //                        }
                             }
-
-                        }
+                            .addOnFailureListener { _ -> }
+                            .addOnCompleteListener {
+                                imageProxy.close()
+                            }
                     }
-                    .addOnFailureListener{
-                        Log.e("BarcodeScanningActivity", "Barcode scanning failed: $it")
-                    }
-            }
-
         }
     }
     private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
@@ -200,7 +152,6 @@ class CameraFragment : Fragment() {
                     }
 
                 imageCapture = ImageCapture.Builder().build() // For Capturing Images
-
                 //            val imageAnalyzer = ImageAnalysis.Builder()
                 //                .build()
                 //                .also {
@@ -209,8 +160,7 @@ class CameraFragment : Fragment() {
                 //                    })
                 //                } // Analyzes Images
 
-                val changedTextView = viewBinding.textViewId2 as TextView
-                //findViewById<View>(R.id.text_view_id2) as TextView
+                val changedTextView = viewBinding.textViewId2
 
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
@@ -219,10 +169,8 @@ class CameraFragment : Fragment() {
                         //{ text -> identifiedWord = text}
                     } // Correctly Analyzes Images to spit out text
 
-
                 // Select back camera as a default
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
 
                 try {
                     // Unbind use cases before rebinding
@@ -233,7 +181,7 @@ class CameraFragment : Fragment() {
                         this, cameraSelector, preview, imageCapture, correctImageAnalyzer)
 
                 } catch(exc: Exception) {
-                    Log.e(CameraFragment.TAG, "Use case binding failed", exc)
+                    Log.e(TAG, "Use case binding failed", exc)
                 }
 
             }, it)

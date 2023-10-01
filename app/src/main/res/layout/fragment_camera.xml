@@ -8,9 +8,6 @@
     tools:context=".CameraFragment">
 
 
-
-
-
     <TextView
         android:id="@+id/text_view_id2"
         android:layout_width="wrap_content"
@@ -25,6 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

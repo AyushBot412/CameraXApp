@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
-        android:id="@+id/camera"
+        android:id="@+id/navigation_qr"
+        android:icon="@drawable/qr_icon"
+        />
+
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title=""
+        android:id="@+id/navigation_bottle_scanner"
         android:icon="@drawable/camera_icon"
         />
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
-        android:id="@+id/instructions"
+        android:id="@+id/navigation_instructions"
         android:icon="@drawable/instructions_icon" />
 </menu>
