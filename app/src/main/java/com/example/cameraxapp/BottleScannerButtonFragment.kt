@@ -17,6 +17,7 @@ class BottleScannerButtonFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         viewBinding = FragmentBottleScannerButtonBinding.inflate(inflater, container, false)
+
         viewBinding!!.bottleScanBtn.setOnClickListener {
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.replace(R.id.frame_layout, CameraFragment())
