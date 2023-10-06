@@ -1,6 +1,7 @@
 package com.example.cameraxapp;
 
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 
 import com.google.mlkit.vision.common.InputImage;
 
@@ -23,9 +24,13 @@ public class FrameProcessor {
             System.out.println("Classifying\n");
             List<String> words = TextRecognitionManager.processTextRecognitionResult(visionText);
             System.out.println(words);
+            for(int i = 0; i < words.size(); i++) {
+                Log.w("words", words.get(i));
+            }
             Constants.BottleType classifiedBottleType = getBottleType(words);
             if (classifiedBottleType != Constants.BottleType.NULL) {
                 System.out.println("Classified Bottle Type " + classifiedBottleType);
+
                 isClassifying = false;
                 return classifiedBottleType.toString();
             } else {
