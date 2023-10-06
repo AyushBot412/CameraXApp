@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
 
                 val image = InputImage.fromMediaImage(mediaImage, 0)
                 val result = recognizer.process(image)
+
                     .addOnSuccessListener { visionText ->
                         name = processor.processVisionText(visionText)
 
