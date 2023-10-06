@@ -33,7 +33,6 @@ import java.util.concurrent.Executors
 
 typealias LumaListener = (luma: Double) -> Unit
 // TODO: add focusing and zooming capability
-// TODO: Implement NDC
 
 class CameraFragment : Fragment() {
     private lateinit var viewBinding: FragmentCameraBinding

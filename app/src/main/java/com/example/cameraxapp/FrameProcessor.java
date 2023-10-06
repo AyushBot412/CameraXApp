@@ -3,16 +3,13 @@ package com.example.cameraxapp;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 
-import com.google.mlkit.vision.common.InputImage;
 
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import com.google.mlkit.vision.text.Text;
 
 public class FrameProcessor {
-    public String text = "text";
     public boolean isClassifying = false;
     TextToSpeech t1;
 
@@ -40,15 +37,6 @@ public class FrameProcessor {
             }
         }
         return "";
-    }
-
-    public void setText(String newText) {
-        text = newText;
-
-    }
-
-    public String getText() {
-        return text;
     }
 
     public static Constants.BottleType getBottleType(List<String> words) {
