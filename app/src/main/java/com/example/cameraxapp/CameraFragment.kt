@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +20,12 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.example.cameraxapp.databinding.FragmentCameraBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.nio.ByteBuffer
-import java.util.HashMap
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -83,15 +82,27 @@ class CameraFragment : Fragment() {
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
+
+
+//            // Initializing the Image Recognition Inferencer
+            val inferencer = InferenceLocal()
+            val classification = inferencer.inference(context, imageProxy)
+            println(classification)
+
             var name: String
             val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
-            val result = image?.let {
+            image?.let {
                         recognizer.process(it)
                             .addOnSuccessListener { visionText ->
                                 name = processor.processVisionText(visionText)
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
                                     //println("Bottle Found: $name")
+//                                    if (classification == name) { // if image recognition and text recognition are same, then go with text
+//                                        displayText.text = name
+//                                    } else { // else, use image recognition
+//                                        displayText.text = classification
+//                                    }
                                     displayText.text = name
 
                                     currentMedicine = name
@@ -112,27 +123,6 @@ class CameraFragment : Fragment() {
                     }
         }
     }
-    private class LuminosityAnalyzer(private val listener: LumaListener) : ImageAnalysis.Analyzer {
-
-        private fun ByteBuffer.toByteArray(): ByteArray {
-            rewind()    // Rewind the buffer to zero
-            val data = ByteArray(remaining())
-            get(data)   // Copy the buffer into a byte array
-            return data // Return the byte array
-        }
-
-        override fun analyze(image: ImageProxy) {
-
-            val buffer = image.planes[0].buffer
-            val data = buffer.toByteArray()
-            val pixels = data.map { it.toInt() and 0xFF }
-            val luma = pixels.average()
-
-            listener(luma)
-
-            image.close()
-        }
-    }
 
     private fun startCamera() {
 
@@ -151,13 +141,6 @@ class CameraFragment : Fragment() {
                     }
 
                 imageCapture = ImageCapture.Builder().build() // For Capturing Images
-                //            val imageAnalyzer = ImageAnalysis.Builder()
-                //                .build()
-                //                .also {
-                //                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                //                        Log.d(TAG, "Average luminosity: $luma")
-                //                    })
-                //                } // Analyzes Images
 
                 val changedTextView = viewBinding.textViewId2
 
