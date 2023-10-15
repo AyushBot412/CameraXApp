@@ -66,6 +66,7 @@ class CameraFragment : Fragment() {
                 ActivityCompat.requestPermissions(
                     it, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
             }
+            startCamera()
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
