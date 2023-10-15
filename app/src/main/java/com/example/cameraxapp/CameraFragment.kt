@@ -25,12 +25,10 @@ import com.example.cameraxapp.databinding.FragmentCameraBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import java.nio.ByteBuffer
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-typealias LumaListener = (luma: Double) -> Unit
 // TODO: add focusing and zooming capability
 
 class CameraFragment : Fragment() {
@@ -79,7 +77,6 @@ class CameraFragment : Fragment() {
     private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String, private val context: Context) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-        val map = HashMap<String, Int>()
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
@@ -99,12 +96,14 @@ class CameraFragment : Fragment() {
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
                                     //println("Bottle Found: $name")
-//                                    if (classification == name) { // if image recognition and text recognition are same, then go with text
-//                                        displayText.text = name
-//                                    } else { // else, use image recognition
-//                                        displayText.text = classification
-//                                    }
-                                    displayText.text = name
+                                    if (classification == name) { // if image recognition and text recognition are same, then go with text
+                                        displayText.text = name
+                                    } else if (classification.isBlank()) { // if image is blank, then do text
+                                        displayText.text = name
+                                    } else { // if image isn't blank and is different than text, use image
+                                        displayText.text = classification
+                                    }
+
 
                                     currentMedicine = name
                                     if (currentMedicine != previousMedicine) {

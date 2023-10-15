@@ -26,11 +26,6 @@ public class InferenceLocal {
     public String inference(Context context, ImageProxy imageProxy) throws IOException {
 
 
-//        ByteBuffer buffer = img.getPlanes()[0].getBuffer();
-//        byte[] bytes = new byte[buffer.capacity()];
-//        buffer.get(bytes);
-//        Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
         // Creating bitmap from ImageProxy
         Bitmap testBitmap = null;
         try {
@@ -57,32 +52,6 @@ public class InferenceLocal {
 
 
 
-        //Creating file in order to write to from Bitmap
-        //File file = new File("app\\src\\main\\java\\com\\example\\cameraxapp\\testFile.txt");
-
-        //new BufferedWriter(new FileWriter(context.getExternalFilesDir() + "currentTestFile"));
-
-        //compressing bitmap into file
-//        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(context.getFilesDir() + "currentTestFile"))){
-//            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
-//            os.flush(); // try with syntax should automatically flush, but I'm just being cautious
-//        } catch (IOException e) {
-//            System.out.println("An error occurred.");
-//            //e.printStackTrace();
-//        } catch (NullPointerException e) {
-//            System.out.println("Bitmap is null.");
-//        }
-
-
-
-
-
-
-        //compressing bitmap into file
-//        OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-//        bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, os);
-//        os.flush();
-//        os.close();
 
 
 
@@ -99,8 +68,7 @@ public class InferenceLocal {
         // !! DISCLAIMER: DO NOT SHARE THIS KEY WITH ANYONE OUTSIDE OF THIS PROJECT. !!
 
 
-        String MODEL_ENDPOINT = "eyedrop-bottle-project/1"; // model endpoint
-        //TODO CHANGE VERSION to 2, or whatever comes next
+        String MODEL_ENDPOINT = "eyedrop-bottle-project/3"; // model endpoint
 
         // Construct the URL
         String uploadURL = "https://detect.roboflow.com/" + MODEL_ENDPOINT + "?api_key=" + API_KEY
@@ -140,21 +108,21 @@ public class InferenceLocal {
             while ((line = reader.readLine()) != null) {
 
                 if (line.contains("Alphagan")) {
-                    result = "Alphagan";
+                    result = "ALPHAGAN";
                 } else if (line.contains("Combigan")) {
-                    result = "Combigan";
+                    result = "COMBIGAN";
                 } else if (line.contains("Dorzolamide")) {
-                    result = "Dorzolamide";
+                    result = "DORZOLAMIDE";
                 } else if (line.contains("Latanoprost")) {
-                    result = "Latanoprost";
+                    result = "LATANOPROST";
                 } else if (line.contains("Predforte")) {
-                    result = "Predforte";
+                    result = "PREDFORTE";
                 } else if (line.contains("Rhopressa")) {
-                    result = "Rhopressa";
+                    result = "RHOPRESSA";
                 } else if (line.contains("Rocklatan")) {
-                    result = "Rocklatan";
+                    result = "ROCKLATAN";
                 } else if (line.contains("Vigamox")) {
-                    result = "Vigamox";
+                    result = "VIGAMOX";
                 }
 
 
