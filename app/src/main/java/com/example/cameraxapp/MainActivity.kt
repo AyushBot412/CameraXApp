@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         // define fragments
         val bottleScannerButtonFragment : Fragment = BottleScannerButtonFragment()
-        val expDateFragment : Fragment = ExpDateFragment()
+        val expDateButtonFragment : Fragment = ExpDateButtonFragment()
         val QRScannerFragment : Fragment = QRScannerFragment()
         val instructionsFragment : Fragment = InstructionsFragment()
 
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             lateinit var fragment: Fragment
             when (item.itemId) {
                 R.id.navigation_bottle_scanner -> fragment = bottleScannerButtonFragment
-                R.id.navigation_exp_date -> fragment= expDateFragment
+                R.id.navigation_exp_date -> fragment= expDateButtonFragment
                 R.id.navigation_qr ->fragment= QRScannerFragment
                 R.id.navigation_instructions -> fragment= instructionsFragment
             }

@@ -21,6 +21,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
+        android:id="@+id/navigation_exp_date"
+        android:icon="@drawable/exp_icon"
+        />
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title=""
         android:id="@+id/navigation_instructions"
         android:icon="@drawable/instructions_icon" />
 </menu>
