@@ -95,7 +95,7 @@ class CameraFragment : Fragment() {
             image?.let {
                         recognizer.process(it)
                             .addOnSuccessListener { visionText ->
-                                name = processor.processVisionText(visionText)
+                                name = processor.processVisionText(visionText, "bottle_name")
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
                                     //println("Bottle Found: $name")
