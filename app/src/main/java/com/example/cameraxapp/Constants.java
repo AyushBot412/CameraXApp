@@ -1,6 +1,5 @@
 package com.example.cameraxapp;
 
-//TODO: Implement NDC
 
 public final class Constants {
     private Constants() {

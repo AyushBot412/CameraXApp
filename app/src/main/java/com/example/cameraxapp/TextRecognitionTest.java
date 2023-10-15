@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
 
 import androidx.annotation.Nullable;

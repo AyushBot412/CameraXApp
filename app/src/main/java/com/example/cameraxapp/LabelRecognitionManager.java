@@ -57,7 +57,6 @@ public class LabelRecognitionManager {
     }
 
     public static EnumMap<Constants.BottleType, HelperType> getFuzzyRecognitionMap(List<String> words) {
-        // TODO: Test Fuzzy Matching
 
         EnumMap<Constants.BottleType, HelperType> map = new EnumMap<>(Constants.BottleType.class);
 
