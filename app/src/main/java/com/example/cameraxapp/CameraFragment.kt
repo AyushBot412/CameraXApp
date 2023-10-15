@@ -34,6 +34,7 @@ typealias LumaListener = (luma: Double) -> Unit
 // TODO: add focusing and zooming capability
 
 class CameraFragment : Fragment() {
+
     private lateinit var viewBinding: FragmentCameraBinding
     private var imageCapture: ImageCapture? = null
 

@@ -21,7 +21,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.cameraxapp.databinding.FragmentCameraBinding
+import com.example.cameraxapp.databinding.FragmentExpCameraBinding
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -36,7 +36,7 @@ import java.util.concurrent.Executors
 // better
 
 class ExpDateFragment : Fragment() {
-    private lateinit var viewBinding: FragmentCameraBinding
+    private lateinit var viewBinding: FragmentExpCameraBinding
     private var imageCapture: ImageCapture? = null
 
     private lateinit var cameraExecutor: ExecutorService
@@ -51,7 +51,7 @@ class ExpDateFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        viewBinding =  FragmentCameraBinding.inflate(inflater, container, false)
+        viewBinding =  FragmentExpCameraBinding.inflate(inflater, container, false)
 
         t1 = TextToSpeech(activity) {
             if (it != TextToSpeech.ERROR) {
@@ -144,7 +144,7 @@ class ExpDateFragment : Fragment() {
 
                 imageCapture = ImageCapture.Builder().build() // For Capturing Images
 
-                val changedTextView = viewBinding.textViewId2
+                val changedTextView = viewBinding.textViewId3
 
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
