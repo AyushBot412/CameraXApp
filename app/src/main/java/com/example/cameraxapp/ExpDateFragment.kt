@@ -43,8 +43,8 @@ class ExpDateFragment : Fragment() {
 
     private var t1: TextToSpeech? = null
 
-    private var previousMedicine : String = ""
-    private var currentMedicine : String = ""
+    private var previousDate : String = ""
+    private var currentDate : String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +77,7 @@ class ExpDateFragment : Fragment() {
         return viewBinding.root
     }
 
-    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String, private val context: Context) : ImageAnalysis.Analyzer {
+    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousDate : String, private var currentDate : String, private val context: Context) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         val map = HashMap<String, Int>()
@@ -91,27 +91,27 @@ class ExpDateFragment : Fragment() {
             val classification = inferencer.inference(context, imageProxy)
             println(classification)
 
-            var name: String
+            var date: String
             val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
             image?.let {
                 recognizer.process(it)
                     .addOnSuccessListener { visionText ->
-                        name = processor.processVisionText(visionText, "exp_date")
-                        if (name != "No Bottle Type Found.") {
-                            Log.w("Bottle Found:", name)
+                        date = processor.processVisionText(visionText, "exp_date")
+                        if (date != "No Expiration Date Found.") {
+                            Log.w("Date Found:", date)
                             //println("Bottle Found: $name")
 //                                    if (classification == name) { // if image recognition and text recognition are same, then go with text
 //                                        displayText.text = name
 //                                    } else { // else, use image recognition
 //                                        displayText.text = classification
 //                                    }
-                            displayText.text = name
+                            displayText.text = date
 
-                            currentMedicine = name
-                            if (currentMedicine != previousMedicine) {
+                            currentDate = date
+                            if (currentDate != previousDate) {
                                 //t1?.speak(name, TextToSpeech.QUEUE_FLUSH, null)
                             }
-                            previousMedicine = name
+                            previousDate = date
                             //displayText.setText(name)
 
                         }
@@ -149,7 +149,7 @@ class ExpDateFragment : Fragment() {
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity()))
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousDate, currentDate, requireActivity()))
                         //{ text -> identifiedWord = text}
                     } // Correctly Analyzes Images to spit out text
 

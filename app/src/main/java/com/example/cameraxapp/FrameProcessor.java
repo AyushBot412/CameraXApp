@@ -16,6 +16,7 @@ import android.view.ViewDebug;
 
 public class FrameProcessor {
     public boolean isClassifying = false;
+    public String text = "text";
     TextToSpeech t1;
 
     String processVisionText(Text visionText, String state) {
@@ -52,20 +53,26 @@ public class FrameProcessor {
                 String date = getExpDate(words);
 
                 if (date != null) {
-                    System.out.println("Classified Bottle Type " + date);
+                    System.out.println("Classified Date: " + date);
+                    isClassifying = false;
+                    return date;
+                } else {
+                    System.out.println("No Date Found");
+                    isClassifying = false;
+                    return "No Date Found."; // change
                 }
             }
         }
         return "";
     }
 
-//    public void setText(String newText) {
-//        text = newText;
-//    }
+    public void setText(String newText) {
+        text = newText;
+    }
 
-//    public String getText() {
-//        return text;
-//    }
+    public String getText() {
+        return text;
+    }
 
 
     public static String getMonth(String currLine)
