@@ -85,7 +85,6 @@ class CameraFragment : Fragment() {
 //            // Initializing the Image Recognition Inferencer
             val inferencer = InferenceLocal()
             val classification = inferencer.inference(context, imageProxy)
-            println(classification)
 
             var name: String
             val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
@@ -95,7 +94,6 @@ class CameraFragment : Fragment() {
                                 name = processor.processVisionText(visionText)
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
-                                    //println("Bottle Found: $name")
                                     if (classification == name) { // if image recognition and text recognition are same, then go with text
                                         displayText.text = name
                                     } else if (classification.isBlank()) { // if image is blank, then do text
@@ -110,11 +108,9 @@ class CameraFragment : Fragment() {
                                         //t1?.speak(name, TextToSpeech.QUEUE_FLUSH, null)
                                     }
                                     previousMedicine = name
-                                    //displayText.setText(name)
 
                                 }
-                //                        else if (name.isEmpty() || name == "No Bottle Type Found.") {
-                //                        }
+
                             }
                             .addOnFailureListener { _ -> }
                             .addOnCompleteListener {
@@ -147,9 +143,8 @@ class CameraFragment : Fragment() {
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity()))
-                        //{ text -> identifiedWord = text}
-                    } // Correctly Analyzes Images to spit out text
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity()))}
+                        // Correctly Analyzes Images to spit out text
 
                 // Select back camera as a default
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA

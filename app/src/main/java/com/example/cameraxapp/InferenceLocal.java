@@ -73,7 +73,6 @@ public class InferenceLocal {
         // Construct the URL
         String uploadURL = "https://detect.roboflow.com/" + MODEL_ENDPOINT + "?api_key=" + API_KEY
                 + "&name=currentImage.jpg";
-        // I just gave it a random name
 
         // Http Request
         HttpURLConnection connection = null;

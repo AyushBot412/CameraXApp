@@ -11,7 +11,6 @@ import com.google.mlkit.vision.text.Text;
 
 public class FrameProcessor {
     public boolean isClassifying = false;
-    TextToSpeech t1;
 
     String processVisionText(Text visionText) {
 
