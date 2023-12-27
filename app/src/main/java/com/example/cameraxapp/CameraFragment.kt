@@ -3,6 +3,7 @@ package com.example.cameraxapp
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -28,6 +29,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
 
 // TODO: add focusing and zooming capability
 
@@ -105,7 +107,44 @@ class CameraFragment : Fragment() {
 
                                     currentMedicine = name
                                     if (currentMedicine != previousMedicine) {
-                                        //t1?.speak(name, TextToSpeech.QUEUE_FLUSH, null)
+                                        // Text To Speech
+                                        //t1?.speak(name, TextToSpeech.QUEUE_ADD, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
+
+                                        if (name == "ALPHAGAN") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.alphagan)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "COMBIGAN") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.combigan)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "DORZOLAMIDE") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.dorzolamide)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "LATANOPROST") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.latanoprost)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "PREDFORTE") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.predforte)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "RHOPRESSA") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.rhopressa)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "ROCKLATAN") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.rocklatan)
+                                            mediaPlayer.start()
+
+                                        } else if (name == "VIGAMOX") {
+                                            val mediaPlayer = MediaPlayer.create(context, R.raw.vigamox)
+                                            mediaPlayer.start()
+
+                                        }
+
+
                                     }
                                     previousMedicine = name
 
