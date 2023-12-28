@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         val bottleScannerButtonFragment : Fragment = BottleScannerButtonFragment()
         //val QRScannerFragment : Fragment = QRScannerFragment()
         //val instructionsFragment : Fragment = InstructionsFragment()
+        val aboutUsFragment : Fragment = AboutUsFragment()
 
         // handle navigation selection
         viewBinding.bottomNavigationView.setOnItemSelectedListener { item ->
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_bottle_scanner -> fragment = bottleScannerButtonFragment
                // R.id.navigation_qr ->fragment= QRScannerFragment
                // R.id.navigation_instructions -> fragment= instructionsFragment
+                R.id.navigation_about_us -> fragment = aboutUsFragment
             }
             replaceFragment(fragment)
             true

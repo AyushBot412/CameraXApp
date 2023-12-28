@@ -12,7 +12,7 @@
         android:textSize="20sp"
         android:layout_centerInParent="true"
         android:id="@+id/qr_scanner_btn"
-        android:textColor="@color/pictonBlue"
+        android:textColor="@color/ourBlue"
         android:backgroundTint="@color/white"
         />
 

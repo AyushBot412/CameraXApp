@@ -6,4 +6,52 @@
     <string name="Instruction">Hold camera towards the medicine bottle</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="scan_bottle">Scan Bottle</string>
+    <string name="about_us_info1">
+        The goal of the project is to develop a working Android application that can
+        correctly and efficiently describe eyedrop medication bottles.
+    </string>
+    <string name="about_us_info2">
+        The application uses advanced YOLOv6 models trained on a custom 10,000 image dataset
+        to detect objects that match the required parameters and subsequently reads aloud the
+        medicine name for patients with poor vision.
+    </string>
+    <string name="our_mission"><u>Our Mission:</u></string>
+    <string name="team"><u>Meet the Team:</u></string>
+    <string name="team_info">
+        The UCI Eyedrop Identifier App Team is a passionate team of individuals who bring diverse skills and expertise to the table.
+        We are united by our shared vision and commitment to delivering excellence.</string>
+
+    <string name="dr_lin">Dr. Lin</string>
+    <string name="dr_lin_info">Faculty Lead and Head Researcher</string>
+
+    <string name="ayush">Ayush</string>
+    <string name="ayush_info">Lead Tech Researcher</string>
+
+    <string name="anh">Anh</string>
+    <string name="anh_info"> Former Programmer </string>
+
+    <string name="lauren">Lauren</string>
+    <string name="lauren_info"> Ophthalmology Resident</string>
+
+    <string name="melika">Melika</string>
+    <string name="kevin">Kevin</string>
+    <string name="omid">Omid</string>
+    <string name="aidin">Aidin</string>
+
+    <string name="med_student"> Medical Student </string>
+
+    <string name="nour">Nour</string>
+    <string name="senghoung">Senghoung</string>
+    <string name="rohit">Rohit</string>
+    <string name="raymond">Raymond</string>
+
+    <string name="undergrad">Undergraduate Programmer </string>
+
+    <string name="hailey">Hailey</string>
+    <string name="hailey_info">Graphic Designer</string>
+
+    <string name="contact">Contact Us</string>
+    <string name="contact_info">We value your feedback and are always here to assist you.
+        If you have any questions, suggestions, or just want to say hello, feel free to reach out to us at eyedrop.linresearchproject@gmail.com.</string>
+
 </resources>

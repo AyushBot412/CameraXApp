@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutUsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--  Our Mission  -->
+        <TextView
+            android:id="@+id/our_mission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/our_mission"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textColor="@color/ourDarkerBlue"
+
+            >
+        </TextView>
+
+
+        <!-- Mission Statement 1 -->
+        <TextView
+            android:id="@+id/mission_statement1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_us_info1"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textColor="@color/black" />
+
+
+        <!-- Medicine Images -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imvCircularWithStroke"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/medicines_collage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="15dp"
+            />
+
+        <!-- Mission Statement 2 -->
+        <TextView
+            android:id="@+id/mission_statement2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_us_info2"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textColor="@color/black" />
+
+
+        <!--  Team  -->
+        <TextView
+            android:id="@+id/team"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/team"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textColor="@color/ourDarkerBlue"
+
+            >
+        </TextView>
+
+        <!--  Team Info  -->
+        <TextView
+            android:id="@+id/team_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/team_info"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textColor="@color/black" />
+
+
+
+
+        <!-- Dr. Lin Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/dr_lin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/dr_lin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+
+            />
+
+        <!--  Dr. Lin Text  -->
+        <TextView
+            android:id="@+id/dr_lin_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dr_lin"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Dr. Lin Info  -->
+        <TextView
+            android:id="@+id/dr_lin_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dr_lin_info"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+
+
+        <!-- Ayush Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ayush"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+
+        <!--  Ayush Text  -->
+        <TextView
+            android:id="@+id/ayush_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ayush"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Ayush Info  -->
+        <TextView
+            android:id="@+id/ayush_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ayush_info"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+
+
+        <!-- Anh Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/anh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+
+        <!--  Anh Text  -->
+        <TextView
+            android:id="@+id/anh_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/anh"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Anh Info  -->
+        <TextView
+            android:id="@+id/anh_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/anh_info"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Lauren Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/lauren"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Lauren Text  -->
+        <TextView
+            android:id="@+id/lauren_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lauren"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Lauren Info  -->
+        <TextView
+            android:id="@+id/lauren_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lauren_info"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Melika Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/melika"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Melika Text  -->
+        <TextView
+            android:id="@+id/melika_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/melika"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Melika Info  -->
+        <TextView
+            android:id="@+id/melika_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/med_student"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Kevin Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/kevin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Kevin Text  -->
+        <TextView
+            android:id="@+id/kevin_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/kevin"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Kevin Info  -->
+        <TextView
+            android:id="@+id/kevin_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/med_student"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Omid Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/omid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Omid Text  -->
+        <TextView
+            android:id="@+id/omid_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/omid"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Omid Info  -->
+        <TextView
+            android:id="@+id/omid_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/med_student"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Aidin Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/aidin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Aidin Text  -->
+        <TextView
+            android:id="@+id/aidin_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/aidin"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Aidin Info  -->
+        <TextView
+            android:id="@+id/aidin_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/med_student"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Nour Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/nour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Nour Text  -->
+        <TextView
+            android:id="@+id/nour_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nour"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Nour Info  -->
+        <TextView
+            android:id="@+id/nour_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/undergrad"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Senghoung Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/senghoung"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Senghoung Text  -->
+        <TextView
+            android:id="@+id/senghoung_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/senghoung"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Senghoung Info  -->
+        <TextView
+            android:id="@+id/senghoung_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/undergrad"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Rohit Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/rohit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Rohit Text  -->
+        <TextView
+            android:id="@+id/rohit_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rohit"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Rohit Info  -->
+        <TextView
+            android:id="@+id/rohit_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/undergrad"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!-- Raymond Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/raymond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Raymond Text  -->
+        <TextView
+            android:id="@+id/raymond_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/raymond"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Raymond Info  -->
+        <TextView
+            android:id="@+id/raymond_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/undergrad"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <!-- Hailey Image -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/hailey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/question_mark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/imvCircular"
+            app:layout_constraintTop_toBottomOf="@id/our_mission"
+            app:shapeAppearanceOverlay="@style/Circular"
+            app:strokeColor="@color/ourDarkerBlue"
+            app:strokeWidth="7dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="25dp"
+            />
+
+        <!--  Hailey Text  -->
+        <TextView
+            android:id="@+id/hailey_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hailey"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+        <!--  Hailey Info  -->
+        <TextView
+            android:id="@+id/hailey_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hailey_info"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+
+            >
+        </TextView>
+
+
+        <TextView
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+
+            tools:ignore="RtlSymmetry">
+        </TextView>
+
+        <!--  Contact  -->
+        <TextView
+            android:id="@+id/contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contact"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:paddingTop="50dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textColor="@color/ourDarkerBlue"
+            android:textAlignment="center"
+
+            tools:ignore="RtlSymmetry">
+        </TextView>
+
+        <!--  Contact Info  -->
+        <TextView
+            android:id="@+id/contact_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/contact_info"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:padding="16dp"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            />
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+
+</ScrollView>

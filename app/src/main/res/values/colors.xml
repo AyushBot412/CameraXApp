@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pictonBlue">#3FBAD9</color>
+    <color name="ourBlue">#FF3FB9D8</color>
+    <color name="ourDarkerBlue">#092F42</color>
 </resources>
