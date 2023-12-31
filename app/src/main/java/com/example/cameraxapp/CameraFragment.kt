@@ -1,6 +1,7 @@
 package com.example.cameraxapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -29,9 +31,12 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraControl
+import androidx.camera.core.CameraInfo
 
 
-// TODO: add focusing and zooming capability
+// TODO: add focusing capability
 
 class CameraFragment : Fragment() {
     private lateinit var viewBinding: FragmentCameraBinding
@@ -43,6 +48,11 @@ class CameraFragment : Fragment() {
 
     private var previousMedicine : String = ""
     private var currentMedicine : String = ""
+
+    private var camera: Camera? = null
+    private var cameraControl: CameraControl? = null
+    private var cameraInformation: CameraInfo? = null
+    private var maxZoomRatio: Float = 1f
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -168,6 +178,7 @@ class CameraFragment : Fragment() {
                 // Used to bind the lifecycle of cameras to the lifecycle owner
                 val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
+
                 // Preview
                 val preview = Preview.Builder()
                     .build()
@@ -193,14 +204,50 @@ class CameraFragment : Fragment() {
                     cameraProvider.unbindAll()
 
                     // Bind use cases to camera
-                    cameraProvider.bindToLifecycle(
+                    camera = cameraProvider.bindToLifecycle(
                         this, cameraSelector, preview, imageCapture, correctImageAnalyzer)
+
+                    cameraControl = camera?.cameraControl
+
+                    enableZoomControls(camera!!.cameraInfo)
+
+
+                    cameraInformation = camera!!.cameraInfo
+                    maxZoomRatio = cameraInformation?.zoomState?.value?.maxZoomRatio ?: 1f
+
+
 
                 } catch(exc: Exception) {
                     Log.e(TAG, "Use case binding failed", exc)
                 }
 
             }, it)
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun enableZoomControls(cameraInfo : CameraInfo?) {
+        // Enable zoom controls for Pinch-to-Zoom
+        val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                // Get the current zoom ratio
+                val currentZoomRatio = cameraInfo?.zoomState?.value?.zoomRatio ?: 1f
+
+                // Calculate the new zoom ratio
+                val newZoomRatio = currentZoomRatio * detector.scaleFactor
+
+                // Set the new zoom ratio with bounds
+                cameraControl?.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo!!.zoomState.value!!.maxZoomRatio))
+
+                return true
+            }
+        }
+
+        // Create listener for pinching
+        val scaleGestureDetector = ScaleGestureDetector(requireContext(), listener)
+        viewBinding.viewFinder.setOnTouchListener { _, event ->
+            scaleGestureDetector.onTouchEvent(event)
+            true
         }
     }
 
