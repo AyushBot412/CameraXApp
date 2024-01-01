@@ -10,30 +10,43 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraControl
+import androidx.camera.core.CameraInfo
+import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
+import androidx.camera.core.MeteringPoint
 import androidx.camera.core.Preview
+import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.cameraxapp.databinding.FragmentCameraBinding
+import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.camera.core.Camera
-import androidx.camera.core.CameraControl
-import androidx.camera.core.CameraInfo
+import androidx.camera.core.TorchState
+import com.example.cameraxapp.R.drawable.flash_off_icon_background
+import com.example.cameraxapp.R.drawable.flash_on_icon_background
+
+
 
 
 // TODO: add focusing capability
@@ -50,9 +63,10 @@ class CameraFragment : Fragment() {
     private var currentMedicine : String = ""
 
     private var camera: Camera? = null
-    private var cameraControl: CameraControl? = null
     private var cameraInformation: CameraInfo? = null
     private var maxZoomRatio: Float = 1f
+    private lateinit var enableTorchLF: ListenableFuture<Void>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +80,16 @@ class CameraFragment : Fragment() {
                 t1?.language = Locale.ENGLISH
             }
         }
+
+        val torchButton: ImageButton = viewBinding.torch
+
+        torchButton.setOnClickListener {
+            // Turn torch on when the button is clicked
+            toggleTorch()
+        }
+
+
+
 
         //Request camera permissions
         if (allPermissionsGranted()) {
@@ -207,13 +231,14 @@ class CameraFragment : Fragment() {
                     camera = cameraProvider.bindToLifecycle(
                         this, cameraSelector, preview, imageCapture, correctImageAnalyzer)
 
-                    cameraControl = camera?.cameraControl
 
-                    enableZoomControls(camera!!.cameraInfo)
+                    enableZoomControls(camera!!.cameraInfo, camera!!.cameraControl)
 
 
                     cameraInformation = camera!!.cameraInfo
                     maxZoomRatio = cameraInformation?.zoomState?.value?.maxZoomRatio ?: 1f
+
+                    //setUpTapToFocus(camera!!.cameraControl)
 
 
 
@@ -221,12 +246,43 @@ class CameraFragment : Fragment() {
                     Log.e(TAG, "Use case binding failed", exc)
                 }
 
+
             }, it)
         }
     }
 
+    private fun toggleTorch() {
+        if (camera!!.cameraInfo.hasFlashUnit()) { // checks for flashlight
+            if (camera!!.cameraInfo.torchState.value == TorchState.ON) {
+                enableTorchLF = camera!!.cameraControl.enableTorch(false) // turning off torch
+
+
+                viewBinding.torch.setImageResource(R.drawable.flash_off) // changing icon
+                viewBinding.torch.setBackgroundResource(flash_off_icon_background) // changing background color
+
+
+            } else {
+                enableTorchLF = camera!!.cameraControl.enableTorch(true)
+
+                viewBinding.torch.setImageResource(R.drawable.flash_on)
+                viewBinding.torch.setBackgroundResource(flash_on_icon_background)
+            }
+
+            enableTorchLF.addListener({
+                try {
+                    enableTorchLF.get()
+                    // At this point, the torch has been successfully enabled or disabled
+                } catch (exc: Exception) {
+                    Log.e(TAG, "Torch functionality failed.", exc)
+                }
+            }, cameraExecutor /* Executor where the runnable callback code is run */)
+        }
+
+
+    }
+
     @SuppressLint("ClickableViewAccessibility")
-    private fun enableZoomControls(cameraInfo : CameraInfo?) {
+    private fun enableZoomControls(cameraInfo : CameraInfo?, cameraControl: CameraControl) {
         // Enable zoom controls for Pinch-to-Zoom
         val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScale(detector: ScaleGestureDetector): Boolean {
@@ -237,7 +293,7 @@ class CameraFragment : Fragment() {
                 val newZoomRatio = currentZoomRatio * detector.scaleFactor
 
                 // Set the new zoom ratio with bounds
-                cameraControl?.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo!!.zoomState.value!!.maxZoomRatio))
+                cameraControl.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo!!.zoomState.value!!.maxZoomRatio))
 
                 return true
             }
@@ -250,6 +306,32 @@ class CameraFragment : Fragment() {
             true
         }
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setUpTapToFocus(cameraControl: CameraControl) {
+        viewBinding.viewFinder.setOnTouchListener(OnTouchListener { v, event ->
+            if (event.action != MotionEvent.ACTION_UP) {
+                /* Original post returns false here, but in my experience this makes
+                onTouch not being triggered for ACTION_UP event */
+                return@OnTouchListener true
+            }
+            val factory = SurfaceOrientedMeteringPointFactory(
+                viewBinding.viewFinder.width.toFloat(), viewBinding.viewFinder.height.toFloat()
+            )
+            val point: MeteringPoint = factory.createPoint(event.x, event.y)
+            try {
+                val action = FocusMeteringAction.Builder(point).build()
+                cameraControl.startFocusAndMetering(action)
+            } catch (e: CameraInfoUnavailableException) {
+                Log.d("CameraFragment", "Cannot access camera info", e)
+            }
+
+            true
+        })
+    }
+
+
+
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         activity?.let { it1 -> ContextCompat.checkSelfPermission(it1.baseContext, it) } == PackageManager.PERMISSION_GRANTED

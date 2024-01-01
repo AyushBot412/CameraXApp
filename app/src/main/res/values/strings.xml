@@ -54,4 +54,7 @@
     <string name="contact_info">We value your feedback and are always here to assist you.
         If you have any questions, suggestions, or just want to say hello, feel free to reach out to us at eyedrop.linresearchproject@gmail.com.</string>
 
+    <string name="flash_on_icon">A tiny Flash on icon</string>
+    <string name="flash_off_icon">A tiny Flash off icon</string>
+
 </resources>

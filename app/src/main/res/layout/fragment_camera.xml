@@ -16,6 +16,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/torch"
+        android:padding="5dp"
+        android:src="@drawable/flash_off"
+        android:contentDescription="@string/flash_on_icon"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="fitCenter"
+        android:background="@drawable/flash_off_icon_background"/>
+
+
+
+
     <TextView
         android:id="@+id/text_view_id2"
         android:layout_width="wrap_content"
