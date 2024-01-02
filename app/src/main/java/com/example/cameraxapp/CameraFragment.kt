@@ -16,6 +16,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.Camera
@@ -47,8 +48,6 @@ import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
 
 
-
-
 // TODO: add focusing capability
 
 class CameraFragment : Fragment() {
@@ -66,6 +65,7 @@ class CameraFragment : Fragment() {
     private var cameraInformation: CameraInfo? = null
     private var maxZoomRatio: Float = 1f
     private lateinit var enableTorchLF: ListenableFuture<Void>
+    private var zoomSeekBar : SeekBar? = null
 
 
     override fun onCreateView(
@@ -87,7 +87,6 @@ class CameraFragment : Fragment() {
             // Turn torch on when the button is clicked
             toggleTorch()
         }
-
 
 
 
@@ -283,6 +282,10 @@ class CameraFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun enableZoomControls(cameraInfo : CameraInfo?, cameraControl: CameraControl) {
+
+        zoomSeekBar = viewBinding.seekbar
+        val progressText = viewBinding.zoomProgress
+
         // Enable zoom controls for Pinch-to-Zoom
         val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
             override fun onScale(detector: ScaleGestureDetector): Boolean {
@@ -295,6 +298,15 @@ class CameraFragment : Fragment() {
                 // Set the new zoom ratio with bounds
                 cameraControl.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo!!.zoomState.value!!.maxZoomRatio))
 
+                // Update SeekBar progress based on zoom ratio
+                val progress = ((newZoomRatio - 1f) / (cameraInfo.zoomState.value!!.maxZoomRatio - 1f) * 100).toInt()
+                zoomSeekBar!!.progress = progress
+
+                // Update Seekbar when pinch is used to change zoom
+                val percent = "Zoom: $progress%"
+                if (progress in 0..100) {
+                    progressText.text = percent
+                }
                 return true
             }
         }
@@ -305,14 +317,45 @@ class CameraFragment : Fragment() {
             scaleGestureDetector.onTouchEvent(event)
             true
         }
+
+
+
+        // I initially planned to have the seekbar only display on the screen as the user is pinching,
+        // but I think for older users, it's better to give them an easier way to zoom.
+
+        zoomSeekBar!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    // Calculate the zoom ratio based on SeekBar progress
+                    val newZoomRatio = 1f + progress / 100f *
+                            (cameraInfo!!.zoomState.value!!.maxZoomRatio - 1f)
+
+                    // Set the new zoom ratio with bounds
+                    cameraControl.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo.zoomState.value!!.maxZoomRatio))
+
+                    // Update Seekbar when seekbar is used to change zoom
+                    val percent = "Zoom: $progress%"
+                    if (progress in 0..100) {
+                        progressText.text = percent
+                    }
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // Not needed for this example
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // Not needed for this example
+            }
+        })
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpTapToFocus(cameraControl: CameraControl) {
         viewBinding.viewFinder.setOnTouchListener(OnTouchListener { v, event ->
             if (event.action != MotionEvent.ACTION_UP) {
-                /* Original post returns false here, but in my experience this makes
-                onTouch not being triggered for ACTION_UP event */
+
                 return@OnTouchListener true
             }
             val factory = SurfaceOrientedMeteringPointFactory(

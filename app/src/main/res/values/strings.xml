@@ -56,5 +56,7 @@
 
     <string name="flash_on_icon">A tiny Flash on icon</string>
     <string name="flash_off_icon">A tiny Flash off icon</string>
+    <string name="zoom_val"> "Zoom: 0%"</string>
+
 
 </resources>
