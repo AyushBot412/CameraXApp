@@ -13,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.SeekBar
@@ -22,15 +21,12 @@ import android.widget.Toast
 import androidx.camera.core.Camera
 import androidx.camera.core.CameraControl
 import androidx.camera.core.CameraInfo
-import androidx.camera.core.CameraInfoUnavailableException
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
-import androidx.camera.core.MeteringPoint
 import androidx.camera.core.Preview
-import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -44,7 +40,6 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.camera.core.TorchState
-import androidx.constraintlayout.widget.ConstraintSet.Motion
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
 
@@ -230,7 +225,6 @@ class CameraFragment : Fragment() {
                         this, cameraSelector, preview, imageCapture, correctImageAnalyzer)
 
 
-                    //enableZoomControls(camera!!.cameraInfo, camera!!.cameraControl)
 
 
                     cameraInformation = camera!!.cameraInfo
@@ -351,133 +345,6 @@ class CameraFragment : Fragment() {
             }
         }
     }
-
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun enableZoomControls(cameraInfo : CameraInfo?, cameraControl: CameraControl) {
-
-        zoomSeekBar = viewBinding.seekbar
-        val progressText = viewBinding.zoomProgress
-
-        // Enable zoom controls for Pinch-to-Zoom
-        val listener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            override fun onScale(detector: ScaleGestureDetector): Boolean {
-                // Get the current zoom ratio
-                val currentZoomRatio = cameraInfo?.zoomState?.value?.zoomRatio ?: 1f
-
-                // Calculate the new zoom ratio
-                val newZoomRatio = currentZoomRatio * detector.scaleFactor
-
-                // Set the new zoom ratio with bounds
-                cameraControl.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo!!.zoomState.value!!.maxZoomRatio))
-
-                // Update SeekBar progress based on zoom ratio
-                val progress = ((newZoomRatio - 1f) / (cameraInfo.zoomState.value!!.maxZoomRatio - 1f) * 100).toInt()
-                zoomSeekBar!!.progress = progress
-
-                // Update Seekbar when pinch is used to change zoom
-                val percent = "Zoom: $progress%"
-                if (progress in 0..100) {
-                    progressText.text = percent
-                }
-                return true
-            }
-        }
-
-        // Create listener for pinching
-        val scaleGestureDetector = ScaleGestureDetector(requireContext(), listener)
-        viewBinding.viewFinder.setOnTouchListener { _, event ->
-            scaleGestureDetector.onTouchEvent(event)
-            true
-        }
-
-
-
-        // I initially planned to have the seekbar only display on the screen as the user is pinching,
-        // but I think for older users, it's better to give them an easier way to zoom.
-
-        zoomSeekBar!!.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    // Calculate the zoom ratio based on SeekBar progress
-                    val newZoomRatio = 1f + progress / 100f *
-                            (cameraInfo!!.zoomState.value!!.maxZoomRatio - 1f)
-
-                    // Set the new zoom ratio with bounds
-                    cameraControl.setZoomRatio(newZoomRatio.coerceIn(1f, cameraInfo.zoomState.value!!.maxZoomRatio))
-
-                    // Update Seekbar when seekbar is used to change zoom
-                    val percent = "Zoom: $progress%"
-                    if (progress in 0..100) {
-                        progressText.text = percent
-                    }
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                // Not needed for this example
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                // Not needed for this example
-            }
-        })
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setUpTapToFocus(cameraControl: CameraControl) {
-        viewBinding.viewFinder.setOnTouchListener(OnTouchListener { view: View, motionEvent: MotionEvent ->
-            when (motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> return@OnTouchListener true
-//                MotionEvent.ACTION_POINTER_UP -> {
-//                    return@OnTouchListener true
-//                }
-//                MotionEvent.ACTION_POINTER_DOWN -> {
-//                    return@OnTouchListener true
-//                }
-//                MotionEvent.ACTION_POINTER_INDEX_MASK -> {
-//                    return@OnTouchListener true
-//                }
-//                MotionEvent.ACTION_POINTER_INDEX_SHIFT -> {
-//                    return@OnTouchListener true
-//                }
-//                MotionEvent.AXIS_GESTURE_PINCH_SCALE_FACTOR-> {
-//                    return@OnTouchListener true
-//                }
-                MotionEvent.ACTION_UP -> {
-                    // Get the MeteringPointFactory from PreviewView
-                    val factory = viewBinding.viewFinder.meteringPointFactory
-
-                    // Create a MeteringPoint from the tap coordinates
-                    val point = factory.createPoint(motionEvent.x, motionEvent.y)
-
-                    // Create a MeteringAction from the MeteringPoint, you can configure it to specify the metering mode
-                    val action = FocusMeteringAction.Builder(point).build()
-
-                    // Trigger the focus and metering. The method returns a ListenableFuture since the operation
-                    // is asynchronous. You can use it get notified when the focus is successful or if it fails.
-                    cameraControl.startFocusAndMetering(action)
-
-                    return@OnTouchListener true
-                }
-                else -> return@OnTouchListener false
-            }
-        })
-    }
-
-    //            val factory = SurfaceOrientedMeteringPointFactory(
-//                viewBinding.viewFinder.width.toFloat(), viewBinding.viewFinder.height.toFloat()
-//            )
-//            val point: MeteringPoint = factory.createPoint(event.x, event.y)
-//            try {
-//                val action = FocusMeteringAction.Builder(point).build()
-//                cameraControl.startFocusAndMetering(action)
-//            } catch (e: CameraInfoUnavailableException) {
-//                Log.d("CameraFragment", "Cannot access camera info", e)
-//            }
-//
-//            true
-
 
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
