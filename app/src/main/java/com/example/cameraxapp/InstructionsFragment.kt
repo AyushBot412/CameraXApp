@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 
 class InstructionsFragment : Fragment() {
 
@@ -12,8 +13,21 @@ class InstructionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val view = inflater.inflate(R.layout.fragment_instructions, container, false)
+        val expdateButton = view.findViewById<Button>(R.id.expdateButton)
+
+        expdateButton.setOnClickListener{
+            val expdateFragment = ExpDateFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.frame_layout, expdateFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        return view
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_instructions, container, false)
+//        return inflater.inflate(R.layout.fragment_instructions, container, false)
     }
 
     companion object {
