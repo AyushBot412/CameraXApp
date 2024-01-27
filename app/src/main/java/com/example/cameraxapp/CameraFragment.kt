@@ -120,7 +120,7 @@ class CameraFragment : Fragment() {
             image?.let {
                         recognizer.process(it)
                             .addOnSuccessListener { visionText ->
-                                name = processor.processVisionText(visionText)
+                                name = processor.processVisionText(visionText, "bottle_name")
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
                                     if (classification == name) { // if image recognition and text recognition are same, then go with text
