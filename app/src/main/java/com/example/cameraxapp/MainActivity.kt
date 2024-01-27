@@ -2,6 +2,7 @@ package com.example.cameraxapp
 
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.cameraxapp.databinding.ActivityMainBinding
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 //        val expDateButtonFragment : Fragment = ExpDateButtonFragment()
         val QRScannerFragment : Fragment = QRScannerFragment()
         val instructionsFragment : Fragment = InstructionsFragment()
+        val expDateFragment : Fragment = ExpDateFragment()
 
         // handle navigation selection
         viewBinding.bottomNavigationView.setOnItemSelectedListener { item ->
@@ -38,6 +40,11 @@ class MainActivity : AppCompatActivity() {
 
         // set default selection
         viewBinding.bottomNavigationView.selectedItemId = R.id.navigation_bottle_scanner
+
+        val expDateButton = findViewById<Button>(R.id.expdateButton);
+        expDateButton.setOnClickListener {
+            replaceFragment(expDateFragment)
+        }
     }
     private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
