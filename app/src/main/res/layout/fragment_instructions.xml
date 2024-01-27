@@ -150,6 +150,9 @@
             android:drawableStart="@drawable/camera_icon"
             android:drawablePadding="4dp"
             android:text="Add Exp Date"
+            android:textSize="20sp"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/pictonBlue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/expdateAnswer" />
 
