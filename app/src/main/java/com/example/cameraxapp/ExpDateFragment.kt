@@ -42,6 +42,7 @@ import java.util.concurrent.Executors
 import androidx.camera.core.TorchState
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
+import kotlinx.android.synthetic.main.fragment_instructions.expdateAnswer
 
 
 class ExpDateFragment : Fragment() {
@@ -59,7 +60,6 @@ class ExpDateFragment : Fragment() {
     private var maxZoomRatio: Float = 1f
     private lateinit var enableTorchLF: ListenableFuture<Void>
     private var zoomSeekBar : SeekBar? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -102,7 +102,7 @@ class ExpDateFragment : Fragment() {
         return viewBinding.root
     }
 
-    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var currentMedicine : String, private val context: Context) : ImageAnalysis.Analyzer {
+    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var currentMedicine : String, private val context: Context, var displayExpdate: String?) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
@@ -129,9 +129,8 @@ class ExpDateFragment : Fragment() {
                             } else { // if image isn't blank and is different than text, use image
                                 displayText.text = classification
                             }
-
+                            displayExpdate = date
                         }
-
                     }
                     .addOnFailureListener { _ -> }
                     .addOnCompleteListener {
@@ -161,11 +160,12 @@ class ExpDateFragment : Fragment() {
                 imageCapture = ImageCapture.Builder().build() // For Capturing Images
 
                 val changedTextView = viewBinding.textViewId2
+                var changedExpdateText = (activity as? MainActivity)?.expdateText
 
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, currentMedicine, requireActivity()))}
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, currentMedicine, requireActivity(), changedExpdateText))}
                 // Correctly Analyzes Images to spit out text
 
                 // Select back camera as a default

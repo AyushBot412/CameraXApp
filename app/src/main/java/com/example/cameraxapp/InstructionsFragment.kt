@@ -1,11 +1,14 @@
 package com.example.cameraxapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_instructions.expdateAnswer
 
 class InstructionsFragment : Fragment() {
 
@@ -16,6 +19,8 @@ class InstructionsFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_instructions, container, false)
         val expdateButton = view.findViewById<Button>(R.id.expdateButton)
+
+        expdateAnswer.text = (activity as? MainActivity)?.expdateText
 
         expdateButton.setOnClickListener{
             val expdateFragment = ExpDateFragment()
@@ -30,10 +35,13 @@ class InstructionsFragment : Fragment() {
 //        return inflater.inflate(R.layout.fragment_instructions, container, false)
     }
 
+
     companion object {
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             InstructionsFragment().apply {
             }
     }
+
+
 }
