@@ -118,7 +118,6 @@ class ExpDateFragment : Fragment() {
 
 //            // Initializing the Image Recognition Inferencer
             val inferencer = InferenceLocal()
-            val classification = inferencer.inference(context, imageProxy)
 
             var date: String
             val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
@@ -127,14 +126,10 @@ class ExpDateFragment : Fragment() {
                     .addOnSuccessListener { visionText ->
                         date = processor.processVisionText(visionText, "exp_date")
                         if (date != "No Date Found.") {
+
                             Log.w("Classified Date:", date)
-                            if (classification == date) { // if image recognition and text recognition are same, then go with text
-                                displayText.text = date
-                            } else if (classification.isBlank()) { // if image is blank, then do text
-                                displayText.text = date
-                            } else { // if image isn't blank and is different than text, use image
-                                displayText.text = classification
-                            }
+                            displayText.text = date
+
                             setExpDate(date)
                         }
                     }

@@ -7,7 +7,7 @@
     tools:context=".InstructionsFragment"
     android:background="@color/ourBlue"
     >
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="20dp"
-            android:text="June 2028"
+            android:text=""
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/expdate"
@@ -145,14 +145,14 @@
             android:id="@+id/expdateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
+            android:layout_marginStart="124dp"
             android:layout_marginTop="8dp"
+            android:backgroundTint="@color/white"
             android:drawableStart="@drawable/camera_icon"
             android:drawablePadding="4dp"
             android:text="Add Exp Date"
-            android:textSize="20sp"
-            android:backgroundTint="@color/white"
             android:textColor="@color/pictonBlue"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/expdateAnswer" />
 
