@@ -39,10 +39,8 @@ class MainActivity : AppCompatActivity() {
             replaceFragment(fragment)
             true
         }
-
         // set default selection
         viewBinding.bottomNavigationView.selectedItemId = R.id.navigation_bottle_scanner
-
     }
     private fun replaceFragment(fragment: Fragment){
         val fragmentManager = supportFragmentManager
