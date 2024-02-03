@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.fragment_instructions.expdateAnswer
 
 class InstructionsFragment : Fragment() {
+    private val viewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,7 +22,9 @@ class InstructionsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_instructions, container, false)
         val expdateButton = view.findViewById<Button>(R.id.expdateButton)
 
-        expdateAnswer.text = (activity as? MainActivity)?.expdateText
+        viewModel.expDate.observe(viewLifecycleOwner) { date ->
+            expdateAnswer.text = date
+        }
 
         expdateButton.setOnClickListener{
             val expdateFragment = ExpDateFragment()
@@ -30,7 +34,6 @@ class InstructionsFragment : Fragment() {
                 .commit()
         }
         return view
-
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_instructions, container, false)
     }
