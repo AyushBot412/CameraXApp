@@ -395,58 +395,7 @@
 
             </LinearLayout>
 
-            <!-- Kevin -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_columnWeight="1">
 
-                <!-- Kevin Image -->
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/kevin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:src="@drawable/question_mark"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/imvCircular"
-                    app:layout_constraintTop_toBottomOf="@id/our_mission"
-                    app:shapeAppearanceOverlay="@style/Circular"
-                    app:strokeColor="@color/ourDarkerBlue"
-                    app:strokeWidth="7dp"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:padding="25dp"
-                    />
-
-                <!--  Kevin Text  -->
-                <TextView
-                    android:id="@+id/kevin_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/kevin"
-                    android:textSize="40sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textAlignment="center"
-
-                    />
-
-                <!--  Kevin Info  -->
-                <TextView
-                    android:id="@+id/kevin_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/med_student"
-                    android:textSize="25sp"
-                    android:textColor="@color/black"
-                    android:textAlignment="center"
-                    android:paddingTop="20dp"
-
-                    />
-            </LinearLayout>
 
             <!-- Omid -->
             <LinearLayout
@@ -548,6 +497,59 @@
                     android:textSize="25sp"
                     android:textColor="@color/black"
                     android:textAlignment="center"
+
+                    />
+            </LinearLayout>
+
+            <!-- Kevin -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_columnWeight="1">
+
+                <!-- Kevin Image -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/kevin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/kevin"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/imvCircular"
+                    app:layout_constraintTop_toBottomOf="@id/our_mission"
+                    app:shapeAppearanceOverlay="@style/Circular"
+                    app:strokeColor="@color/ourDarkerBlue"
+                    app:strokeWidth="7dp"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:padding="25dp"
+                    />
+
+                <!--  Kevin Text  -->
+                <TextView
+                    android:id="@+id/kevin_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/kevin"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+
+                    />
+
+                <!--  Kevin Info  -->
+                <TextView
+                    android:id="@+id/kevin_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/med_student"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:paddingTop="20dp"
 
                     />
             </LinearLayout>
