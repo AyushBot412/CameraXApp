@@ -107,11 +107,14 @@ class CameraFragment : Fragment() {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
+
+        private var mediaPlayer: MediaPlayer? = null
+
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
 
 
-//            // Initializing the Image Recognition Inferencer
+            // Initializing the Image Recognition Inferencer
             val inferencer = InferenceLocal()
             val classification = inferencer.inference(context, imageProxy)
 
@@ -123,8 +126,8 @@ class CameraFragment : Fragment() {
                                 name = processor.processVisionText(visionText)
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
-                                    if (classification == name) { // if image recognition and text recognition are same, then go with text
-                                        displayText.text = name
+                                    if (classification == name) { // if image recognition and text recognition are same, then go with image
+                                        displayText.text = classification
                                     } else if (classification.isBlank()) { // if image is blank, then do text
                                         displayText.text = name
                                     } else { // if image isn't blank and is different than text, use image
@@ -137,40 +140,19 @@ class CameraFragment : Fragment() {
                                         // Text To Speech
                                         //t1?.speak(name, TextToSpeech.QUEUE_ADD, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
 
-                                        if (name == "ALPHAGAN") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.alphagan)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "COMBIGAN") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.combigan)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "DORZOLAMIDE") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.dorzolamide)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "LATANOPROST") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.latanoprost)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "PREDFORTE") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.predforte)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "RHOPRESSA") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.rhopressa)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "ROCKLATAN") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.rocklatan)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "VIGAMOX") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.vigamox)
-                                            mediaPlayer.start()
-
+                                        mediaPlayer?.release()
+                                        mediaPlayer = when (name) {
+                                            "ALPHAGAN" -> MediaPlayer.create(context, R.raw.alphagan)
+                                            "COMBIGAN" -> MediaPlayer.create(context, R.raw.combigan)
+                                            "DORZOLAMIDE" -> MediaPlayer.create(context, R.raw.dorzolamide)
+                                            "LATANOPROST" -> MediaPlayer.create(context, R.raw.latanoprost)
+                                            "PREDFORTE" -> MediaPlayer.create(context, R.raw.predforte)
+                                            "RHOPRESSA" -> MediaPlayer.create(context, R.raw.rhopressa)
+                                            "ROCKLATAN" -> MediaPlayer.create(context, R.raw.rocklatan)
+                                            "VIGAMOX" -> MediaPlayer.create(context, R.raw.vigamox)
+                                            else -> null
                                         }
-
+                                        mediaPlayer?.start()
 
                                     }
                                     previousMedicine = name
