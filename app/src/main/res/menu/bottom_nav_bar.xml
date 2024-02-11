@@ -2,6 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+<<<<<<< Updated upstream
+=======
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title=""
+        android:id="@+id/navigation_qr"
+        android:icon="@drawable/qr_icon"
+        />
+
+>>>>>>> Stashed changes
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
