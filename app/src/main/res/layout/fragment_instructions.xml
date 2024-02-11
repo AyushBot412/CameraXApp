@@ -7,7 +7,10 @@
     tools:context=".InstructionsFragment"
     android:background="@color/ourBlue"
     >
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -113,6 +116,46 @@
             app:layout_constraintTop_toBottomOf="@+id/misc"
             android:textColor="@color/white"/>
 
+        <TextView
+            android:id="@+id/expdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            android:text="Expiration Date:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/miscAnswer"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/expdateAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="20dp"
+            android:text="No Date Scanned"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/expdate"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/expdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/white"
+            android:drawableStart="@drawable/camera_icon"
+            android:drawablePadding="4dp"
+            android:text="Add Exp Date"
+            android:textColor="@color/pictonBlue"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/expdateAnswer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </FrameLayout>

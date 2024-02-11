@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -42,17 +41,18 @@ import java.util.concurrent.Executors
 import androidx.camera.core.TorchState
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
+import androidx.fragment.app.activityViewModels
 
 
-class CameraFragment : Fragment() {
+class ExpDateFragment : Fragment() {
     private lateinit var viewBinding: FragmentCameraBinding
     private var imageCapture: ImageCapture? = null
+    private val viewModel: SharedViewModel by activityViewModels()
 
     private lateinit var cameraExecutor: ExecutorService
 
     private var t1: TextToSpeech? = null
 
-    private var previousMedicine : String = ""
     private var currentMedicine : String = ""
 
     private var camera: Camera? = null
@@ -60,7 +60,6 @@ class CameraFragment : Fragment() {
     private var maxZoomRatio: Float = 1f
     private lateinit var enableTorchLF: ListenableFuture<Void>
     private var zoomSeekBar : SeekBar? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,68 +102,45 @@ class CameraFragment : Fragment() {
         return viewBinding.root
     }
 
-    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String, private val context: Context) : ImageAnalysis.Analyzer {
+    inner class YourImageAnalyzer(
+        private val displayText: TextView,
+        private var t1: TextToSpeech?,
+        private var currentMedicine: String,
+        private val context: Context,
+        viewModel: SharedViewModel
+    ) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
-
-        private var mediaPlayer: MediaPlayer? = null
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
 
 
-            // Initializing the Image Recognition Inferencer
+//            // Initializing the Image Recognition Inferencer
             val inferencer = InferenceLocal()
-            val classification = inferencer.inference(context, imageProxy)
 
-            var name: String
+            var date: String
             val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
             image?.let {
-                        recognizer.process(it)
-                            .addOnSuccessListener { visionText ->
-                                name = processor.processVisionText(visionText, "bottle_name")
-                                if (name != "No Bottle Type Found.") {
-                                    Log.w("Bottle Found:", name)
-                                    if (classification == name) { // if image recognition and text recognition are same, then go with image
-                                        displayText.text = classification
-                                    } else if (classification.isBlank()) { // if image is blank, then do text
-                                        displayText.text = name
-                                    } else { // if image isn't blank and is different than text, use image
-                                        displayText.text = classification
-                                    }
+                recognizer.process(it)
+                    .addOnSuccessListener { visionText ->
+                        date = processor.processVisionText(visionText, "exp_date")
+                        if (date != "No Date Found.") {
 
+                            Log.w("Classified Date:", date)
+                            displayText.text = date
 
-                                    currentMedicine = name
-                                    if (currentMedicine != previousMedicine) {
-                                        // Text To Speech
-                                        //t1?.speak(name, TextToSpeech.QUEUE_ADD, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
-
-                                        mediaPlayer?.release()
-                                        mediaPlayer = when (name) {
-                                            "ALPHAGAN" -> MediaPlayer.create(context, R.raw.alphagan)
-                                            "COMBIGAN" -> MediaPlayer.create(context, R.raw.combigan)
-                                            "DORZOLAMIDE" -> MediaPlayer.create(context, R.raw.dorzolamide)
-                                            "LATANOPROST" -> MediaPlayer.create(context, R.raw.latanoprost)
-                                            "PREDFORTE" -> MediaPlayer.create(context, R.raw.predforte)
-                                            "RHOPRESSA" -> MediaPlayer.create(context, R.raw.rhopressa)
-                                            "ROCKLATAN" -> MediaPlayer.create(context, R.raw.rocklatan)
-                                            "VIGAMOX" -> MediaPlayer.create(context, R.raw.vigamox)
-                                            else -> null
-                                        }
-                                        mediaPlayer?.start()
-
-                                    }
-                                    previousMedicine = name
-
-                                }
-
-                            }
-                            .addOnFailureListener { _ -> }
-                            .addOnCompleteListener {
-                                imageProxy.close()
-                            }
+                            setExpDate(date)
+                        }
                     }
+                    .addOnFailureListener { _ -> }
+                    .addOnCompleteListener {
+                        imageProxy.close()
+                    }
+            }
+        }
+        fun setExpDate(date: String) {
+            viewModel.setExpDate(date)
         }
     }
 
@@ -192,8 +168,8 @@ class CameraFragment : Fragment() {
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity()))}
-                        // Correctly Analyzes Images to spit out text
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, currentMedicine, requireActivity(), viewModel))}
+                // Correctly Analyzes Images to spit out text
 
                 // Select back camera as a default
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
