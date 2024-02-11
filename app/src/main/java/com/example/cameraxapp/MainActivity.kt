@@ -18,12 +18,8 @@ class MainActivity : AppCompatActivity() {
         // define fragments
         val bottleScannerButtonFragment : Fragment = BottleScannerButtonFragment()
         val QRScannerFragment : Fragment = QRScannerFragment()
-<<<<<<< Updated upstream
-        val instructionsFragment : Fragment = InstructionsFragment()
-=======
-        //val instructionsFragment : Fragment = InstructionsFragment()
+        // val instructionsFragment : Fragment = InstructionsFragment()
         val aboutUsFragment : Fragment = AboutUsFragment()
->>>>>>> Stashed changes
 
         // handle navigation selection
         viewBinding.bottomNavigationView.setOnItemSelectedListener { item ->
@@ -31,13 +27,8 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_bottle_scanner -> fragment = bottleScannerButtonFragment
                 R.id.navigation_qr ->fragment= QRScannerFragment
-<<<<<<< Updated upstream
-                R.id.navigation_instructions -> fragment= instructionsFragment
-=======
-               // R.id.navigation_instructions -> fragment= instructionsFragment
-                R.id.navigation_about_us -> fragment = aboutUsFragment
->>>>>>> Stashed changes
-            }
+                // R.id.navigation_instructions -> fragment= instructionsFragment
+                R.id.navigation_about_us -> fragment = aboutUsFragment }
             replaceFragment(fragment)
             true
         }

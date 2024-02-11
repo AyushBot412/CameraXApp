@@ -38,13 +38,14 @@ class QRScannerFragment : Fragment() {
 
                 try {
 
+
+                    // getting json instructions
                     val gson = Gson()
                     val instructionsObject = gson.fromJson(jsonContent, InstructionsData::class.java)
 
-                    Log.d("YourFragment", "Parsed Instructions: $instructionsObject")
-
-
+                    Log.d("Parsed Instructions", "$instructionsObject")
                     val prettyJson = JSONObject(jsonContent).toString(2)
+
 
                     // Dialog Box
                     val builder = AlertDialog.Builder(context)

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-<<<<<<< Updated upstream
-=======
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,13 +9,12 @@
         android:icon="@drawable/qr_icon"
         />
 
->>>>>>> Stashed changes
     <item
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
-        android:id="@+id/navigation_qr"
-        android:icon="@drawable/qr_icon"
+        android:id="@+id/navigation_about_us"
+        android:icon="@drawable/baseline_group_24"
         />
 
     <item
@@ -28,10 +24,10 @@
         android:id="@+id/navigation_bottle_scanner"
         android:icon="@drawable/camera_icon"
         />
-    <item
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:title=""
-        android:id="@+id/navigation_instructions"
-        android:icon="@drawable/instructions_icon" />
+<!--    <item-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:title=""-->
+<!--        android:id="@+id/navigation_instructions"-->
+<!--        android:icon="@drawable/instructions_icon" />-->
 </menu>
