@@ -10,4 +10,17 @@
     <color name="pictonBlue">#3FBAD9</color>
     <color name="ourBlue">#FF3FB9D8</color>
     <color name="ourDarkerBlue">#092F42</color>
+
+    <!--Medication Colors -->
+    <color name="ALPHAGAN">#800080</color>
+    <color name="COMBIGAN">#90EE90</color>
+    <color name="DORZOLAMIDE">#FFA500</color>
+    <color name="LATANOPROST">#40E0D0</color>
+    <color name="PREDFORTE_1">#FFC0CB</color>
+    <color name="PREDFORTE_2">#C0FFF4</color>
+    <color name="RHOPRESSA_1">#FFFFFF</color>
+    <color name="RHOPRESSA_2">#E0420D</color>
+    <color name="ROCKLATAN_1">#00954C</color>
+    <color name="ROCKLATAN_2">#81BC07</color>
+    <color name="VIGAMOX">#CFB27D</color>
 </resources>
