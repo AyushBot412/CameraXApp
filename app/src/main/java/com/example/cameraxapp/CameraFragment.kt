@@ -129,7 +129,8 @@ open class CameraFragment : Fragment() {
         fun changeCameraBackgroundColor(medicineName: String) {
             when (medicineName) {
                 "ALPHAGAN" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(alphagan_textview_attributes)
-                "COMBIGAN" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(combigan_textview_attributes)
+                "COMBIGAN" -> {cameraFragment.viewBinding.textViewId2.setBackgroundResource(combigan_textview_attributes)
+                                cameraFragment.viewBinding.textViewId2.setTextColor(cameraFragment.resources.getColor(R.color.COMBIGAN_TEXT))}
                 "DORZOLAMIDE" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(dorzolamide_textview_attributes)
                 "LATANOPROST" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(latanoprost_textview_attributes)
                 "PREDFORTE" -> {cameraFragment.viewBinding.textViewId2.setBackgroundResource(predforte_textview_attributes)
