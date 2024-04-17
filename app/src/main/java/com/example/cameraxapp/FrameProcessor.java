@@ -9,6 +9,7 @@ import android.util.Log;
 import java.time.Month;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import com.google.mlkit.vision.text.Text;
 import android.util.Log;
@@ -93,6 +94,8 @@ public class FrameProcessor {
             add("DEC");
         }};
 
+        List<String> moList = new ArrayList<>(monthSet);
+
         if (currLine.length() == 2)
         {
 
@@ -107,10 +110,10 @@ public class FrameProcessor {
             //if 2 char string is valid integer that falls within appropriate range
             if (isnum) {
                 int monthInt = Integer.parseInt(currLine);
-                Month[] months = Month.values();
+//                Month[] months = Month.values();
 
                 if (monthInt >= 1 && monthInt <= 12){
-                    return(months[monthInt - 1].toString());
+                    return(moList.get(monthInt - 1));//[monthInt - 1].toString());
                 }
             }
         }
