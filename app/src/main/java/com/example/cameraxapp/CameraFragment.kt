@@ -42,9 +42,18 @@ import java.util.concurrent.Executors
 import androidx.camera.core.TorchState
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
+import com.example.cameraxapp.R.drawable.alphagan_textview_attributes
+import com.example.cameraxapp.R.drawable.combigan_textview_attributes
+import com.example.cameraxapp.R.drawable.dorzolamide_textview_attributes
+import com.example.cameraxapp.R.drawable.latanoprost_textview_attributes
+import com.example.cameraxapp.R.drawable.predforte_textview_attributes
+import com.example.cameraxapp.R.drawable.rhopressa_textview_attributes
+import com.example.cameraxapp.R.drawable.rocklatan_textview_attributes
+import com.example.cameraxapp.R.drawable.vigamox_textview_attributes
 
 
-class CameraFragment : Fragment() {
+
+open class CameraFragment : Fragment() {
     private lateinit var viewBinding: FragmentCameraBinding
     private var imageCapture: ImageCapture? = null
 
@@ -103,15 +112,42 @@ class CameraFragment : Fragment() {
         return viewBinding.root
     }
 
-    private class YourImageAnalyzer(private val displayText : TextView, private var t1 : TextToSpeech?, private var previousMedicine : String, private var currentMedicine : String, private val context: Context) : ImageAnalysis.Analyzer {
+    private class YourImageAnalyzer(
+        private val displayText : TextView,
+        private var t1 : TextToSpeech?,
+        private var previousMedicine : String,
+        private var currentMedicine : String,
+        private val context: Context,
+        private val cameraFragment: CameraFragment
+    ) : ImageAnalysis.Analyzer {
         val processor: FrameProcessor = FrameProcessor()
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+
+        private var mediaPlayer: MediaPlayer? = null
+
+        fun changeCameraBackgroundColor(medicineName: String) {
+            when (medicineName) {
+                "ALPHAGAN" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(alphagan_textview_attributes)
+                "COMBIGAN" -> {cameraFragment.viewBinding.textViewId2.setBackgroundResource(combigan_textview_attributes)
+                                cameraFragment.viewBinding.textViewId2.setTextColor(cameraFragment.resources.getColor(R.color.COMBIGAN_TEXT))}
+                "DORZOLAMIDE" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(dorzolamide_textview_attributes)
+                "LATANOPROST" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(latanoprost_textview_attributes)
+                "PREDFORTE" -> {cameraFragment.viewBinding.textViewId2.setBackgroundResource(predforte_textview_attributes)
+                                cameraFragment.viewBinding.textViewId2.setTextColor(cameraFragment.resources.getColor(R.color.black))}
+                "RHOPRESSA" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(rhopressa_textview_attributes)
+                "ROCKLATAN" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(rocklatan_textview_attributes)
+                "VIGAMOX" -> cameraFragment.viewBinding.textViewId2.setBackgroundResource(vigamox_textview_attributes)
+            }
+
+
+        }
 
         override fun analyze(imageProxy: ImageProxy) {
             val mediaImage = imageProxy.image
 
 
-//            // Initializing the Image Recognition Inferencer
+            // Initializing the Image Recognition Inferencer
             val inferencer = InferenceLocal()
             val classification = inferencer.inference(context, imageProxy)
 
@@ -123,12 +159,18 @@ class CameraFragment : Fragment() {
                                 name = processor.processVisionText(visionText, "bottle_name")
                                 if (name != "No Bottle Type Found.") {
                                     Log.w("Bottle Found:", name)
-                                    if (classification == name) { // if image recognition and text recognition are same, then go with text
-                                        displayText.text = name
+                                    cameraFragment.viewBinding.textViewId2.setTextColor(cameraFragment.resources.getColor(R.color.white))
+
+                                    if (classification == name) { // if image recognition and text recognition are same, then go with image
+                                        displayText.text = classification
+                                        changeCameraBackgroundColor(classification)
                                     } else if (classification.isBlank()) { // if image is blank, then do text
                                         displayText.text = name
+                                        changeCameraBackgroundColor(name)
                                     } else { // if image isn't blank and is different than text, use image
                                         displayText.text = classification
+                                        changeCameraBackgroundColor(classification)
+
                                     }
 
 
@@ -137,43 +179,23 @@ class CameraFragment : Fragment() {
                                         // Text To Speech
                                         //t1?.speak(name, TextToSpeech.QUEUE_ADD, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
 
-                                        if (name == "ALPHAGAN") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.alphagan)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "COMBIGAN") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.combigan)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "DORZOLAMIDE") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.dorzolamide)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "LATANOPROST") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.latanoprost)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "PREDFORTE") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.predforte)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "RHOPRESSA") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.rhopressa)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "ROCKLATAN") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.rocklatan)
-                                            mediaPlayer.start()
-
-                                        } else if (name == "VIGAMOX") {
-                                            val mediaPlayer = MediaPlayer.create(context, R.raw.vigamox)
-                                            mediaPlayer.start()
-
+                                        mediaPlayer?.release()
+                                        mediaPlayer = when (name) {
+                                            "ALPHAGAN" -> MediaPlayer.create(context, R.raw.alphagan)
+                                            "COMBIGAN" -> MediaPlayer.create(context, R.raw.combigan)
+                                            "DORZOLAMIDE" -> MediaPlayer.create(context, R.raw.dorzolamide)
+                                            "LATANOPROST" -> MediaPlayer.create(context, R.raw.latanoprost)
+                                            "PREDFORTE" -> MediaPlayer.create(context, R.raw.predforte)
+                                            "RHOPRESSA" -> MediaPlayer.create(context, R.raw.rhopressa)
+                                            "ROCKLATAN" -> MediaPlayer.create(context, R.raw.rocklatan)
+                                            "VIGAMOX" -> MediaPlayer.create(context, R.raw.vigamox)
+                                            else -> null
                                         }
-
+                                        mediaPlayer?.start()
 
                                     }
                                     previousMedicine = name
+
 
                                 }
 
@@ -185,6 +207,7 @@ class CameraFragment : Fragment() {
                     }
         }
     }
+
 
     private fun startCamera() {
 
@@ -210,7 +233,7 @@ class CameraFragment : Fragment() {
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity()))}
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity(), this))}
                         // Correctly Analyzes Images to spit out text
 
                 // Select back camera as a default

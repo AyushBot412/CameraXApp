@@ -21,33 +21,33 @@
         The UCI Eyedrop Identifier App Team is a passionate team of individuals who bring diverse skills and expertise to the table.
         We are united by our shared vision and commitment to delivering excellence.</string>
 
-    <string name="dr_lin">Dr. Lin</string>
-    <string name="dr_lin_info">Faculty Lead and Head Researcher</string>
+    <string name="dr_lin">Ken Lin, M.D, PhD</string>
+    <string name="dr_lin_info">Principal Investigator</string>
 
-    <string name="ayush">Ayush</string>
-    <string name="ayush_info">Undergraduate Tech Lead</string>
+    <string name="ayush">Ayush Jain</string>
+    <string name="ayush_info">Undergraduate &#xA; Tech Lead</string>
 
-    <string name="anh">Anh</string>
+    <string name="anh">Anh T. Nguyen</string>
     <string name="anh_info"> Lead Programmer </string>
 
-    <string name="lauren">Lauren</string>
+    <string name="lauren">Lauren Chen</string>
     <string name="lauren_info"> Ophthalmology Resident</string>
 
-    <string name="melika">Melika</string>
-    <string name="kevin">Kevin</string>
-    <string name="omid">Omid</string>
-    <string name="aidin">Aidin</string>
+    <string name="melika">Melika Ghalehei </string>
+    <string name="kevin">Kevin Wu</string>
+    <string name="omid">Seyed Omid Mohammadi</string>
+    <string name="aidin">Aidin Spina</string>
 
     <string name="med_student"> Medical Student </string>
 
-    <string name="nour">Nour</string>
-    <string name="senghoung">Senghoung</string>
-    <string name="rohit">Rohit</string>
-    <string name="raymond">Raymond</string>
+    <string name="nour">Nour Siwar</string>
+    <string name="senghoung">Senghoung Lim</string>
+    <string name="rohit">Rohit Srivats</string>
+    <string name="raymond">Raymond House</string>
 
-    <string name="undergrad">Undergraduate Programmer </string>
+    <string name="undergrad"> Android Developer </string>
 
-    <string name="hailey">Hailey</string>
+    <string name="hailey">Hailey Schaffer</string>
     <string name="hailey_info">Graphic Designer</string>
 
     <string name="contact">Contact Us</string>
