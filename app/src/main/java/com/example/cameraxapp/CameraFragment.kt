@@ -114,7 +114,7 @@ open class CameraFragment : Fragment() {
 
     private class YourImageAnalyzer(
         private val displayText : TextView,
-        private var t1 : TextToSpeech?,
+        //private var t1 : TextToSpeech?,
         private var previousMedicine : String,
         private var currentMedicine : String,
         private val context: Context,
@@ -176,8 +176,7 @@ open class CameraFragment : Fragment() {
 
                                     currentMedicine = name
                                     if (currentMedicine != previousMedicine) {
-                                        // Text To Speech
-                                        //t1?.speak(name, TextToSpeech.QUEUE_ADD, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
+
 
                                         mediaPlayer?.release()
                                         mediaPlayer = when (name) {
@@ -233,7 +232,7 @@ open class CameraFragment : Fragment() {
                 val correctImageAnalyzer = ImageAnalysis.Builder()
                     .build()
                     .also {
-                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, t1, previousMedicine, currentMedicine, requireActivity(), this))}
+                        it.setAnalyzer(cameraExecutor, YourImageAnalyzer(changedTextView, previousMedicine, currentMedicine, requireActivity(), this))}
                         // Correctly Analyzes Images to spit out text
 
                 // Select back camera as a default
