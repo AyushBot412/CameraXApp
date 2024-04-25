@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.cameraxapp.Room.PrescriptionEntity
 import com.example.cameraxapp.databinding.FragmentQrScannerBinding
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -16,12 +18,15 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import org.json.JSONObject
+import com.example.cameraxapp.Room.AppApplication
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 
 class QRScannerFragment : Fragment() {
     private var viewBinding: FragmentQrScannerBinding? = null
     private lateinit var barLauncher: ActivityResultLauncher<ScanOptions>
-
+    private val prescriptions = mutableListOf<PrescriptionEntity>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,27 +39,39 @@ class QRScannerFragment : Fragment() {
         barLauncher = registerForActivityResult(ScanContract()) { result: ScanIntentResult? ->
             if (result?.contents != null) {
 
-                val jsonContent = result.contents
+                val jsonContentFromQrCode = result.contents
+                // Log parsed instructions
+                Log.d("JSON", jsonContentFromQrCode)
 
                 try {
-
-
-                    // getting json instructions
-                    val gson = Gson()
-                    val instructionsObject = gson.fromJson(jsonContent, InstructionsData::class.java)
-
-                    Log.d("Parsed Instructions", "$instructionsObject")
-                    val prettyJson = JSONObject(jsonContent).toString(2)
-
 
                     // Dialog Box
                     val builder = AlertDialog.Builder(context)
                         .setTitle("Download Instructions?")
-                        .setMessage(prettyJson)
+                        //.setMessage(prettyJson)
                         .setCancelable(true)
                         .setPositiveButton("Yes") { dialogInterface, _ ->
+                            lifecycleScope.launch(IO) {
+                                // Parse text content as JSON
+                                val jsonObject = JSONObject(jsonContentFromQrCode)
+                                val prescriptionsArray = jsonObject.getJSONArray("prescriptions")
+                                val prescriptionDao = (requireActivity().application as AppApplication).db.prescriptionDao()
+
+                                val prescriptionEntities = (0 until prescriptionsArray.length()).map { i ->
+                                    val prescriptionObject = prescriptionsArray.getJSONObject(i)
+                                    PrescriptionEntity(
+                                        name = prescriptionObject.getString("name"),
+                                        eye = prescriptionObject.getString("eye"),
+                                        frequency = prescriptionObject.getString("frequency"),
+                                        specialInstructions = prescriptionObject.getString("specialInstructions"),
+                                        expirationDate = prescriptionObject.getString("expiryDate")
+                                    )
+                                }
+
+                                prescriptionDao.insertAll(prescriptionEntities)
+                            }
                             Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
-                            dialogInterface.dismiss() // where instructions should upload
+                            dialogInterface.dismiss()
 
                         }
                         .setNegativeButton("No"){dialogInterface, _ ->
@@ -64,6 +81,7 @@ class QRScannerFragment : Fragment() {
                 }
                 catch (e:JsonSyntaxException){
                     Toast.makeText(requireContext(), "Invalid JSON format", Toast.LENGTH_LONG).show()
+
                 }
             }
         }
