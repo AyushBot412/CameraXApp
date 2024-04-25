@@ -9,6 +9,9 @@ import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+/*
+The following class defines and provides methods that our app can use to query, update, insert, and delete data in our created database.
+ */
 @Dao
 interface PrescriptionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -25,6 +28,10 @@ interface PrescriptionDao {
 
     @Update
      fun updatePrescription(prescription: PrescriptionEntity)
+    @Query("UPDATE prescriptions_table SET expirationDate = :newExpirationDate WHERE name = :prescriptionName")
+    suspend fun updateExpirationDateByName(prescriptionName: String, newExpirationDate: String)
 
+    @Query("SELECT * FROM prescriptions_table WHERE name = :prescriptionName LIMIT 1")
+     fun getPrescriptionByName(prescriptionName: String): PrescriptionEntity?
 
 }

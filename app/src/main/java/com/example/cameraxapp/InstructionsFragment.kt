@@ -1,74 +1,88 @@
 package com.example.cameraxapp
 
+import PrescriptionAdapter
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.cameraxapp.PrescriptionList.PrescriptionModel
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.PrescriptionDao
-import com.example.cameraxapp.Room.PrescriptionEntity
-import kotlinx.android.synthetic.main.fragment_instructions.expdateAnswer
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import androidx.fragment.app.activityViewModels
+
 
 class InstructionsFragment : Fragment() {
-    private val viewModel: SharedViewModel by activityViewModels()
+    private lateinit var adapter : PrescriptionAdapter
+    private val prescriptionModelList: MutableList<PrescriptionModel> = mutableListOf()
     private lateinit var prescriptionDao: PrescriptionDao
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_instructions, container, false)
-        val expdateButton = view.findViewById<Button>(R.id.expdateButton)
-
-        viewModel.expDate.observe(viewLifecycleOwner) { date ->
-            expdateAnswer.text = date
-        }
-
-        expdateButton.setOnClickListener{
-            val expdateFragment = ExpDateFragment()
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.frame_layout, expdateFragment)
-                .addToBackStack(null)
-                .commit()
-        }
-        return view
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_instructions, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_instructions, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize RecyclerView and Adapter
+        val recyclerView: RecyclerView = view.findViewById(R.id.prescriptionRecyclerView)
+        adapter = PrescriptionAdapter({ selectedPrescription ->
+            handlePrescriptionClick(selectedPrescription)
+        }) { selectedPrescription ->
+            openExpirationFragment(selectedPrescription)
+        }
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
         val application = requireActivity().application as AppApplication
         prescriptionDao = application.db.prescriptionDao()
 
-        // Retrieve list of prescriptions
+        // Retrieve medicine data from the database
         lifecycleScope.launch {
-            val prescriptions = prescriptionDao.getAllPrescriptions()
-            // Now we have list of prescriptions
-            // TODO: Next, populate UI
-        }
-    }
 
-
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            InstructionsFragment().apply {
+            prescriptionDao.getAllPrescriptions().collect() {prescriptionEntities ->
+                val prescriptions = prescriptionEntities.map { entity ->
+                    PrescriptionModel(
+                        name = entity.name,
+                        details = PrescriptionModel.Details(
+                            eye = entity.eye,
+                            frequency = entity.frequency,
+                            specialInstructions = entity.specialInstructions,
+                            expiryDate = entity.expirationDate ?: "" // Default value if expiryDate is null
+                        ),
+                        isExpanded = false // Initially set to false for collapsed state
+                    )
+                }
+                prescriptionModelList.clear()
+                prescriptionModelList.addAll(prescriptions)
+                adapter.updateList(prescriptionModelList)
             }
+        }
+
     }
 
+    private fun handlePrescriptionClick(selectedPrescription: PrescriptionModel) {
+        selectedPrescription.isExpanded = !selectedPrescription.isExpanded
+        adapter.notifyItemChanged(prescriptionModelList.indexOf(selectedPrescription))
+    }
+
+    private fun openExpirationFragment(selectedPrescription: PrescriptionModel) {
+        val expirationFragment = ExpDateFragment().apply {
+            arguments = Bundle().apply {
+                putString("prescriptionName", selectedPrescription.name)
+            }
+        }
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, expirationFragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
 }

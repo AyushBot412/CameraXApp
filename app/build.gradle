@@ -93,6 +93,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'androidx.fragment:fragment-ktx:1.5.0'
 
+    // Card View
+    implementation "androidx.cardview:cardview:1.0.0"
+
 
 }
 

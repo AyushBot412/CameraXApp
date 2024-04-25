@@ -42,6 +42,12 @@ import androidx.camera.core.TorchState
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.cameraxapp.Room.AppApplication
+import com.example.cameraxapp.Room.PrescriptionDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ExpDateFragment : Fragment() {
@@ -60,6 +66,8 @@ class ExpDateFragment : Fragment() {
     private var maxZoomRatio: Float = 1f
     private lateinit var enableTorchLF: ListenableFuture<Void>
     private var zoomSeekBar : SeekBar? = null
+
+    private lateinit var prescriptionDao: PrescriptionDao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,6 +101,26 @@ class ExpDateFragment : Fragment() {
                     it, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
             }
             startCamera()
+        }
+
+        val application = requireActivity().application as AppApplication
+        prescriptionDao = application.db.prescriptionDao()
+
+        // Retrieve prescription name from arguments
+        val prescriptionName = arguments?.getString("prescriptionName")
+
+        // Observe changes to the expiration date
+        viewModel.expDate.observe(viewLifecycleOwner) { date ->
+            // Update the expiration date in the database
+            prescriptionName?.let { name ->
+                Toast.makeText(requireContext(), "Here is ${date}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Here is ${name}", Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch {
+                    withContext(Dispatchers.IO) {
+                        prescriptionDao.updateExpirationDateByName(name, date)
+                    }
+                }
+            }
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()

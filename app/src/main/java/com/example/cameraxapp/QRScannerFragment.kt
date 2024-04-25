@@ -26,8 +26,6 @@ import kotlinx.coroutines.launch
 class QRScannerFragment : Fragment() {
     private var viewBinding: FragmentQrScannerBinding? = null
     private lateinit var barLauncher: ActivityResultLauncher<ScanOptions>
-    private val prescriptions = mutableListOf<PrescriptionEntity>()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,22 +37,25 @@ class QRScannerFragment : Fragment() {
         barLauncher = registerForActivityResult(ScanContract()) { result: ScanIntentResult? ->
             if (result?.contents != null) {
 
-                val jsonContentFromQrCode = result.contents
-                // Log parsed instructions
-                Log.d("JSON", jsonContentFromQrCode)
-
                 try {
 
                     // Dialog Box
-                    val builder = AlertDialog.Builder(context)
+                    AlertDialog.Builder(context)
                         .setTitle("Download Instructions?")
-                        //.setMessage(prettyJson)
                         .setCancelable(true)
                         .setPositiveButton("Yes") { dialogInterface, _ ->
+
+                            // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
                             lifecycleScope.launch(IO) {
-                                // Parse text content as JSON
+
+                                // Parse text content
+                                val jsonContentFromQrCode = result.contents
+
+                                // Converting to JSON and getting Prescriptions array
                                 val jsonObject = JSONObject(jsonContentFromQrCode)
                                 val prescriptionsArray = jsonObject.getJSONArray("prescriptions")
+
+                                // Getting access to be able to perform db operations
                                 val prescriptionDao = (requireActivity().application as AppApplication).db.prescriptionDao()
 
                                 val prescriptionEntities = (0 until prescriptionsArray.length()).map { i ->
@@ -68,6 +69,7 @@ class QRScannerFragment : Fragment() {
                                     )
                                 }
 
+                                // inserting all prescriptions here
                                 prescriptionDao.insertAll(prescriptionEntities)
                             }
                             Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
@@ -97,19 +99,11 @@ class QRScannerFragment : Fragment() {
     private fun scanCode() {
 
         val options = ScanOptions()
-        options.setPrompt("Volume up to flash on")
-        options.setBeepEnabled(true)
+        options.setPrompt("Volume up for flash and focus")
+        options.setBeepEnabled(false)
         options.setOrientationLocked(true)
         options.captureActivity = CaptureAct::class.java
         barLauncher.launch(options)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-         QRScannerFragment().apply {
-
-         }
     }
 
 }
