@@ -113,8 +113,8 @@ class ExpDateFragment : Fragment() {
         viewModel.expDate.observe(viewLifecycleOwner) { date ->
             // Update the expiration date in the database
             prescriptionName?.let { name ->
-                Toast.makeText(requireContext(), "Here is ${date}", Toast.LENGTH_SHORT).show()
-                Toast.makeText(requireContext(), "Here is ${name}", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(requireContext(), "Here is ${date}", Toast.LENGTH_SHORT).show()
+               // Toast.makeText(requireContext(), "Here is ${name}", Toast.LENGTH_SHORT).show()
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
                         prescriptionDao.updateExpirationDateByName(name, date)
