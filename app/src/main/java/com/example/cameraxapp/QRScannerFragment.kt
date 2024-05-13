@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.cameraxapp.Room.PrescriptionEntity
 import com.example.cameraxapp.databinding.FragmentQrScannerBinding
-import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
@@ -35,9 +34,36 @@ class QRScannerFragment : Fragment() {
 
         // registering barLauncher in lifecycle to prevent errors
         barLauncher = registerForActivityResult(ScanContract()) { result: ScanIntentResult? ->
-            if (result?.contents != null) {
-
+            val contents = result?.contents
+            if (contents != null) {
                 try {
+
+
+                    // Parse text content
+                    val jsonContentFromQrCode = result.contents
+
+                    // Converting to JSON and getting Prescriptions array
+                    Log.d("QRCODEISSUE", jsonContentFromQrCode)
+                    val jsonObject = JSONObject(jsonContentFromQrCode)
+                    val prescriptionsArray =
+                        jsonObject.getJSONArray("prescriptions")
+
+                    // Getting access to be able to perform db operations
+                    val prescriptionDao =
+                        (requireActivity().application as AppApplication).db.prescriptionDao()
+
+                    val prescriptionEntities =
+                        (0 until prescriptionsArray.length()).map { i ->
+                            val prescriptionObject =
+                                prescriptionsArray.getJSONObject(i)
+                            PrescriptionEntity(
+                                name = prescriptionObject.getString("name"),
+                                eye = prescriptionObject.getString("eye"),
+                                frequency = prescriptionObject.getString("frequency"),
+                                specialInstructions = prescriptionObject.getString("specialInstructions"),
+                                expirationDate = prescriptionObject.getString("expiryDate")
+                            )
+                        }
 
                     // Dialog Box
                     AlertDialog.Builder(context)
@@ -48,29 +74,8 @@ class QRScannerFragment : Fragment() {
                             // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
                             lifecycleScope.launch(IO) {
 
-                                // Parse text content
-                                val jsonContentFromQrCode = result.contents
-
-                                // Converting to JSON and getting Prescriptions array
-                                val jsonObject = JSONObject(jsonContentFromQrCode)
-                                val prescriptionsArray = jsonObject.getJSONArray("prescriptions")
-
-                                // Getting access to be able to perform db operations
-                                val prescriptionDao = (requireActivity().application as AppApplication).db.prescriptionDao()
-
-                                val prescriptionEntities = (0 until prescriptionsArray.length()).map { i ->
-                                    val prescriptionObject = prescriptionsArray.getJSONObject(i)
-                                    PrescriptionEntity(
-                                        name = prescriptionObject.getString("name"),
-                                        eye = prescriptionObject.getString("eye"),
-                                        frequency = prescriptionObject.getString("frequency"),
-                                        specialInstructions = prescriptionObject.getString("specialInstructions"),
-                                        expirationDate = prescriptionObject.getString("expiryDate")
-                                    )
-                                }
-
-                                // inserting all prescriptions here
-                                prescriptionDao.insertAll(prescriptionEntities)
+                                    // inserting all prescriptions here
+                                    prescriptionDao.insertAll(prescriptionEntities)
                             }
                             Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
                             dialogInterface.dismiss()
@@ -81,15 +86,19 @@ class QRScannerFragment : Fragment() {
                             dialogInterface.dismiss() // nothing is done
                         }.show()
                 }
-                catch (e:JsonSyntaxException){
-                    Toast.makeText(requireContext(), "Invalid JSON format", Toast.LENGTH_LONG).show()
+                catch (e:Exception){
+                    //Toast.makeText(requireContext(), "Invalid JSON format", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Error Occurred: Please Try Again", Toast.LENGTH_LONG).show()
+                    Log.e("QRCODEISSUEPART2", e.message.toString())
 
                 }
             }
         }
 
         viewBinding!!.qrScannerBtn.setOnClickListener{
-            scanCode()
+                scanCode()
+
+
         }
 
         return viewBinding!!.root
