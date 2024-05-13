@@ -4,15 +4,14 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.cameraxapp.Room.PrescriptionEntity
 import com.example.cameraxapp.databinding.FragmentQrScannerBinding
-import com.google.gson.JsonSyntaxException
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
@@ -28,7 +27,7 @@ class QRScannerFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): RelativeLayout? {
         viewBinding = FragmentQrScannerBinding.inflate(inflater, container, false)
 
 
@@ -95,13 +94,11 @@ class QRScannerFragment : Fragment() {
             }
         }
 
-        viewBinding!!.qrScannerBtn.setOnClickListener{
+        viewBinding?.qrScannerBtn?.setOnClickListener{
                 scanCode()
-
-
         }
 
-        return viewBinding!!.root
+        return viewBinding?.root
     }
 
     // QRCode functionality
@@ -110,6 +107,9 @@ class QRScannerFragment : Fragment() {
         val options = ScanOptions()
         options.setPrompt("Volume up for flash and focus")
         options.setBeepEnabled(false)
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
+        options.setCameraId(0)
+        options.setBarcodeImageEnabled(true)
         options.setOrientationLocked(true)
         options.captureActivity = CaptureAct::class.java
         barLauncher.launch(options)
