@@ -9,11 +9,13 @@ Each instance of an Entity data class represents a row in a table for prescripti
 Essentially, we're creating a "template" for each row in our future database table, by specifying the columns.
  */
 
-@Entity(tableName = "prescriptions_table", primaryKeys = ["name"])
+@Entity(tableName = "prescriptions_table", primaryKeys = ["medicineName"])
 data class PrescriptionEntity(
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "eye") val eye: String,
+    @ColumnInfo(name = "medicineName") val medicineName: String,
+    @ColumnInfo(name = "leftEyeSelected") val leftEyeSelected: Boolean,
+    @ColumnInfo(name = "rightEyeSelected") val rightEyeSelected: Boolean,
+    @ColumnInfo(name = "bothEyesSelected") val bothEyesSelected: Boolean,
     @ColumnInfo(name = "frequency") val frequency: String,
-    @ColumnInfo(name = "specialInstructions") val specialInstructions: String,
+    @ColumnInfo(name = "specialInstruction") val specialInstruction: String,
     @ColumnInfo(name = "expirationDate") val expirationDate: String? = null // This will be initially null and later updated by the user
 )

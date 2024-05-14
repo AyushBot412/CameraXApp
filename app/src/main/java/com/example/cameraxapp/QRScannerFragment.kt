@@ -19,6 +19,7 @@ import org.json.JSONObject
 import com.example.cameraxapp.Room.AppApplication
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 
 
 class QRScannerFragment : Fragment() {
@@ -36,16 +37,13 @@ class QRScannerFragment : Fragment() {
             val contents = result?.contents
             if (contents != null) {
                 try {
-
-
                     // Parse text content
                     val jsonContentFromQrCode = result.contents
 
                     // Converting to JSON and getting Prescriptions array
                     Log.d("QRCODEISSUE", jsonContentFromQrCode)
-                    val jsonObject = JSONObject(jsonContentFromQrCode)
-                    val prescriptionsArray =
-                        jsonObject.getJSONArray("prescriptions")
+
+                    val prescriptionsArray = JSONArray(jsonContentFromQrCode)
 
                     // Getting access to be able to perform db operations
                     val prescriptionDao =
@@ -53,14 +51,20 @@ class QRScannerFragment : Fragment() {
 
                     val prescriptionEntities =
                         (0 until prescriptionsArray.length()).map { i ->
-                            val prescriptionObject =
-                                prescriptionsArray.getJSONObject(i)
+                            val prescriptionObject = prescriptionsArray.getJSONObject(i)
+                            val eyeSelectionObject = prescriptionObject.getJSONObject("eyeSelection")
+                            val leftEyeSelected = eyeSelectionObject.getBoolean("left")
+                            val rightEyeSelected = eyeSelectionObject.getBoolean("right")
+                            val bothEyesSelected = eyeSelectionObject.getBoolean("both")
+
                             PrescriptionEntity(
-                                name = prescriptionObject.getString("name"),
-                                eye = prescriptionObject.getString("eye"),
+                                medicineName = prescriptionObject.getString("medicineName"),
+                                leftEyeSelected = leftEyeSelected,
+                                rightEyeSelected = rightEyeSelected,
+                                bothEyesSelected = bothEyesSelected,
                                 frequency = prescriptionObject.getString("frequency"),
-                                specialInstructions = prescriptionObject.getString("specialInstructions"),
-                                expirationDate = prescriptionObject.getString("expiryDate")
+                                specialInstruction = prescriptionObject.getString("specialInstruction"),
+                                expirationDate = "N/A"
                             )
                         }
 

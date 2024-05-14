@@ -26,10 +26,10 @@ interface PrescriptionDao {
     @Query("SELECT * FROM prescriptions_table")
      fun getAllPrescriptions(): Flow<List<PrescriptionEntity>>
 
-    @Query("UPDATE prescriptions_table SET expirationDate = :newExpirationDate WHERE name = :prescriptionName")
+    @Query("UPDATE prescriptions_table SET expirationDate = :newExpirationDate WHERE medicineName = :prescriptionName")
     suspend fun updateExpirationDateByName(prescriptionName: String, newExpirationDate: String)
 
-    @Query("SELECT * FROM prescriptions_table WHERE name = :prescriptionName LIMIT 1")
+    @Query("SELECT * FROM prescriptions_table WHERE medicineName = :prescriptionName LIMIT 1")
      fun getPrescriptionByName(prescriptionName: String): PrescriptionEntity?
 
 }

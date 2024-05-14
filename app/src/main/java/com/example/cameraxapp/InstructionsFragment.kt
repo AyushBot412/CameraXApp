@@ -49,13 +49,8 @@ class InstructionsFragment : Fragment() {
             prescriptionDao.getAllPrescriptions().collect() {prescriptionEntities ->
                 val prescriptions = prescriptionEntities.map { entity ->
                     PrescriptionModel(
-                        name = entity.name,
-                        details = PrescriptionModel.Details(
-                            eye = entity.eye,
-                            frequency = entity.frequency,
-                            specialInstructions = entity.specialInstructions,
-                            expiryDate = entity.expirationDate ?: "" // Default value if expiryDate is null
-                        ),
+                        medicineName = entity.medicineName,
+                        details = PrescriptionModel.Details.fromPrescriptionEntity(entity),
                         isExpanded = false // Initially set to false for collapsed state
                     )
                 }
@@ -75,7 +70,7 @@ class InstructionsFragment : Fragment() {
     private fun openExpirationFragment(selectedPrescription: PrescriptionModel) {
         val expirationFragment = ExpDateFragment().apply {
             arguments = Bundle().apply {
-                putString("prescriptionName", selectedPrescription.name)
+                putString("prescriptionName", selectedPrescription.medicineName)
             }
         }
 

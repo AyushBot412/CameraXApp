@@ -66,7 +66,7 @@ class PrescriptionAdapter(
 
         fun bind(prescriptionModel: PrescriptionModel) {
             // Bind data to views for collapsed state
-            itemView.findViewById<TextView>(R.id.prescriptionNameTextView).text = prescriptionModel.name
+            itemView.findViewById<TextView>(R.id.prescriptionNameTextView).text = prescriptionModel.medicineName
         }
     }
 
@@ -85,11 +85,11 @@ class PrescriptionAdapter(
 
         fun bind(prescriptionModel: PrescriptionModel) {
             // Bind data to views for expanded state
-            itemView.findViewById<TextView>(R.id.prescriptionNameTextView).text = prescriptionModel.name
+            itemView.findViewById<TextView>(R.id.prescriptionNameTextView).text = prescriptionModel.medicineName
             itemView.findViewById<TextView>(R.id.eyeTextView).text = prescriptionModel.details.eye
             itemView.findViewById<TextView>(R.id.frequencyTextView).text = prescriptionModel.details.frequency
-            itemView.findViewById<TextView>(R.id.specialInstructionsTextView).text = prescriptionModel.details.specialInstructions
-            itemView.findViewById<TextView>(R.id.expirationDateTextView).text = prescriptionModel.details.expiryDate
+            itemView.findViewById<TextView>(R.id.specialInstructionsTextView).text = prescriptionModel.details.specialInstruction
+            itemView.findViewById<TextView>(R.id.expirationDateTextView).text = prescriptionModel.details.expirationDate
             addExpirationDateButton.setOnClickListener {
                 onExpirationButtonClick(prescriptionModel)
             }
