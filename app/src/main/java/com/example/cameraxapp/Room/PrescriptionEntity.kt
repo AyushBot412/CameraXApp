@@ -16,6 +16,6 @@ data class PrescriptionEntity(
     @ColumnInfo(name = "rightEyeSelected") val rightEyeSelected: Boolean,
     @ColumnInfo(name = "bothEyesSelected") val bothEyesSelected: Boolean,
     @ColumnInfo(name = "frequency") val frequency: String,
-    @ColumnInfo(name = "specialInstruction") val specialInstruction: String,
+    @ColumnInfo(name = "specialInstruction") val specialInstruction: String? = null,
     @ColumnInfo(name = "expirationDate") val expirationDate: String? = null // This will be initially null and later updated by the user
 )

@@ -1,12 +1,11 @@
 package com.example.cameraxapp
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.cameraxapp.databinding.FragmentBottleScannerButtonBinding
-import com.example.cameraxapp.databinding.FragmentQrScannerBinding
 
 class BottleScannerButtonFragment : Fragment() {
     private var viewBinding: FragmentBottleScannerButtonBinding? = null

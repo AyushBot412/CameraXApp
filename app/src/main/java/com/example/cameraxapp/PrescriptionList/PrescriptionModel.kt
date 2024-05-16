@@ -27,14 +27,13 @@ data class PrescriptionModel(
                 return Details(
                     eye = eye,
                     frequency = entity.frequency,
-                    specialInstruction = entity.specialInstruction,
-                    expirationDate = entity.expirationDate?: ""
+                    specialInstruction = entity.specialInstruction ?: "N/A",
+                    expirationDate = entity.expirationDate?: "N/A"
                 )
             }
         }
     }
 }
-
 
 
 

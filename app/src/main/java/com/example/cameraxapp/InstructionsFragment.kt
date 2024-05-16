@@ -80,4 +80,11 @@ class InstructionsFragment : Fragment() {
             .commit()
     }
 
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            InstructionsFragment().apply {
+            }
+    }
+
 }

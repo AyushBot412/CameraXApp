@@ -2,12 +2,9 @@ package com.example.cameraxapp
 
 
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
 import com.example.cameraxapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -23,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         val bottleScannerButtonFragment : Fragment = BottleScannerButtonFragment()
         val aboutUsFragment : Fragment = AboutUsFragment()
 //        val expDateButtonFragment : Fragment = ExpDateButtonFragment()
-        val QRScannerFragment : Fragment = QRScannerFragment()
+        val QRScannerButtonFragment : Fragment = QRScannerButtonFragment()
         val instructionsFragment : Fragment = InstructionsFragment()
 
         // handle navigation selection
@@ -33,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_bottle_scanner -> fragment = bottleScannerButtonFragment
                 R.id.navigation_about_us -> fragment = aboutUsFragment
 //                R.id.navigation_exp_date -> fragment= expDateButtonFragment
-                R.id.navigation_qr ->fragment= QRScannerFragment
+                R.id.navigation_qr ->fragment= QRScannerButtonFragment
                 R.id.navigation_instructions -> fragment= instructionsFragment
             }
             replaceFragment(fragment)
