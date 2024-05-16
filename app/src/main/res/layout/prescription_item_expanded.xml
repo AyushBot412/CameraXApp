@@ -16,9 +16,7 @@
         android:textSize="35sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
-        app:layout_constraintHorizontal_bias="0.099" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/eyeLabelTextView"

@@ -3,11 +3,11 @@ package com.example.cameraxapp.QR_Functionality
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.budiyev.android.codescanner.AutoFocusMode
@@ -79,6 +79,7 @@ class QRScannerImplFragment : Fragment() {
 
     private fun insertQRInformationToDatabase(it: Result) {
         val contents = it.text
+
         if (contents != null) {
             try {
                 // Parse text content
@@ -90,35 +91,17 @@ class QRScannerImplFragment : Fragment() {
                 val prescriptionsArray = JSONArray(jsonContentFromQrCode)
 
                 // Getting access to be able to perform db operations
-                val prescriptionDao =
-                    (requireActivity().application as AppApplication).db.prescriptionDao()
+                val prescriptionDao = (requireActivity().application as AppApplication).db.prescriptionDao()
 
-                val prescriptionEntities =
-                    (0 until prescriptionsArray.length()).map { i ->
-                        val prescriptionObject = prescriptionsArray.getJSONObject(i)
-                        val eyeSelectionObject = prescriptionObject.getJSONObject("eyeSelection")
-                        val leftEyeSelected = eyeSelectionObject.getBoolean("left")
-                        val rightEyeSelected = eyeSelectionObject.getBoolean("right")
-                        val bothEyesSelected = eyeSelectionObject.getBoolean("both")
-
-                        PrescriptionEntity(
-                            medicineName = prescriptionObject.getString("medicineName"),
-                            leftEyeSelected = leftEyeSelected,
-                            rightEyeSelected = rightEyeSelected,
-                            bothEyesSelected = bothEyesSelected,
-                            frequency = prescriptionObject.getString("frequency").ifEmpty { "N/A" },
-                            specialInstruction = prescriptionObject.getString("specialInstruction")
-                                .ifEmpty { "N/A" },
-                            expirationDate = "N/A"
-                        )
-                    }
+                // Setting each entity information
+                val prescriptionEntities = setEntityInformation(prescriptionsArray)
 
                 // Dialog Box
                 initiateDialog(prescriptionDao, prescriptionEntities)
+
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Invalid JSON format", Toast.LENGTH_LONG).show()
                 Log.e("QR_CODE_ERROR", e.message.toString())
-
             }
         }
         else {
@@ -126,10 +109,32 @@ class QRScannerImplFragment : Fragment() {
         }
     }
 
+    private fun setEntityInformation(prescriptionsArray: JSONArray) =
+        (0 until prescriptionsArray.length()).map { i ->
+            val prescriptionObject = prescriptionsArray.getJSONObject(i)
+            val eyeSelectionObject = prescriptionObject.getJSONObject("eyeSelection")
+            val leftEyeSelected = eyeSelectionObject.getBoolean("left")
+            val rightEyeSelected = eyeSelectionObject.getBoolean("right")
+            val bothEyesSelected = eyeSelectionObject.getBoolean("both")
+
+            PrescriptionEntity(
+                medicineName = prescriptionObject.getString("medicineName"),
+                leftEyeSelected = leftEyeSelected,
+                rightEyeSelected = rightEyeSelected,
+                bothEyesSelected = bothEyesSelected,
+                frequency = prescriptionObject.getString("frequency").ifEmpty { "N/A" },
+                specialInstruction = prescriptionObject.getString("specialInstruction")
+                    .ifEmpty { "N/A" },
+                expirationDate = "N/A"
+            )
+        }
+
     private fun initiateDialog(
         prescriptionDao: PrescriptionDao,
         prescriptionEntities: List<PrescriptionEntity>
     ) {
+
+
         AlertDialog.Builder(context)
             .setTitle("Download Instructions?")
             .setCancelable(true)
