@@ -73,18 +73,12 @@ class InstructionsFragment : Fragment() {
                 putString("prescriptionName", selectedPrescription.medicineName)
             }
         }
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, expirationFragment)
-            .addToBackStack(null)
-            .commit()
+        (activity as? MainActivity)?.replaceFragment(expirationFragment)
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            InstructionsFragment().apply {
-            }
+        fun newInstance() = InstructionsFragment()
     }
 
 }

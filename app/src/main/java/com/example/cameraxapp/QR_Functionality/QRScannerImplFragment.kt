@@ -138,19 +138,16 @@ class QRScannerImplFragment : Fragment() {
 
                 // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
                 lifecycleScope.launch(Dispatchers.IO) {
-
-                    // inserting all prescriptions here
                     prescriptionDao.insertAll(prescriptionEntities)
                 }
                 Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
                 (activity as? MainActivity)?.onQRContentDownloaded()
-
             }
             .setNegativeButton("No") { dialogInterface, _ ->
                 Toast.makeText(context, "Instructions not Uploaded", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
-                (activity as? MainActivity)?.onQRContentNotDownloaded()
+                (activity as? MainActivity)?.replaceFragment(QRScannerButtonFragment())
             }.show()
     }
 

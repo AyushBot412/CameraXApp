@@ -13,7 +13,6 @@ class QRScannerButtonFragment : Fragment() {
     private var viewBinding: FragmentQrScannerButtonBinding? = null
 
     // Use interface and listener so fragment communicates action to Main.
-    // When defining the interface and listener, fragment will send a callback to Main when button is clicked.
     interface QRScannerButtonListener {
         fun onQRScannerButtonClicked()
     }
@@ -32,11 +31,10 @@ class QRScannerButtonFragment : Fragment() {
         return viewBinding?.root
     }
 
-    // The following two functions are lifecycle methods which help the fragment and the activity know when
-    // they are connected and when they are not, and to communicate to each other using the interface.
+    // The following are lifecycle methods which help the fragment and the activity know when they're
+    // connected and when they're not, and to communicate to each other using the interface.
 
-    // onAttach: attaches this fragment to Main, helping the fragment to know that Main has implemented
-    // the Listener so they can communicate
+    // onAttach: attaches fragment to Main, helping the fragment know that Main has implemented the listener
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is QRScannerButtonListener) {
@@ -46,7 +44,7 @@ class QRScannerButtonFragment : Fragment() {
         }
     }
 
-    // onDetach: where the fragment is no longer connected to Main, Listener becomes null.
+    // onDetach: fragment is no longer connected to Main, listener becomes null.
     override fun onDetach() {
         super.onDetach()
         listener = null

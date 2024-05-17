@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), QRScannerButtonFragment.QRScannerButto
             .commit()
     }
 
-    // Call this in main to centralize logic for transitioning fragments
+    // Call these methods in main to centralize logic for transitioning fragments
     fun onQRContentDownloaded() {
         supportFragmentManager.popBackStack() // Pop the QRCodeScanningFragment off the back stack
         supportFragmentManager.beginTransaction()
@@ -59,18 +59,7 @@ class MainActivity : AppCompatActivity(), QRScannerButtonFragment.QRScannerButto
             .commit()
         bottomNavigationView.selectedItemId = R.id.navigation_instructions
     }
-
-    fun onQRContentNotDownloaded() {
-        supportFragmentManager.popBackStack() // Pop the QRCodeScanningFragment off the back stack
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, QRScannerButtonFragment.newInstance())
-            .addToBackStack(null)
-            .commit()
-        bottomNavigationView.selectedItemId = R.id.navigation_qr
-    }
-
-
-    private fun replaceFragment(fragment: Fragment){
+    fun replaceFragment(fragment: Fragment){
       supportFragmentManager
           .beginTransaction()
           .replace(R.id.frame_layout, fragment)
