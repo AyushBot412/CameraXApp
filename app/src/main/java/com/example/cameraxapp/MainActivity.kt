@@ -5,9 +5,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
+import com.example.cameraxapp.QR_Functionality.QRScannerImplFragment
 import com.example.cameraxapp.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.bottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), QRScannerButtonFragment.QRScannerButtonListener {
     private lateinit var viewBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,11 +41,40 @@ class MainActivity : AppCompatActivity() {
         // set default selection
         viewBinding.bottomNavigationView.selectedItemId = R.id.navigation_bottle_scanner
     }
+
+    // Main implements onQRScannerButtonClicked here
+    override fun onQRScannerButtonClicked() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, QRScannerImplFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    // Call this in main to centralize logic for transitioning fragments
+    fun onQRContentDownloaded() {
+        supportFragmentManager.popBackStack() // Pop the QRCodeScanningFragment off the back stack
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, InstructionsFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
+        bottomNavigationView.selectedItemId = R.id.navigation_instructions
+    }
+
+    fun onQRContentNotDownloaded() {
+        supportFragmentManager.popBackStack() // Pop the QRCodeScanningFragment off the back stack
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, QRScannerButtonFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
+        bottomNavigationView.selectedItemId = R.id.navigation_qr
+    }
+
+
     private fun replaceFragment(fragment: Fragment){
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_layout, fragment)
-        fragmentTransaction.commit()
+      supportFragmentManager
+          .beginTransaction()
+          .replace(R.id.frame_layout, fragment)
+          .commit()
     }
 
 }

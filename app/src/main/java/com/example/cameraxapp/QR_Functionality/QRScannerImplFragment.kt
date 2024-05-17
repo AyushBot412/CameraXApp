@@ -1,9 +1,12 @@
 package com.example.cameraxapp.QR_Functionality
 
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -17,6 +20,7 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.example.cameraxapp.InstructionsFragment
+import com.example.cameraxapp.MainActivity
 import com.example.cameraxapp.R
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.PrescriptionDao
@@ -29,6 +33,7 @@ import org.json.JSONArray
 
 class QRScannerImplFragment : Fragment() {
     private lateinit var codeScanner: CodeScanner
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -46,10 +51,9 @@ class QRScannerImplFragment : Fragment() {
         }
     }
 
-    private fun scanCode(
-        activity: FragmentActivity,
-        scannerView: CodeScannerView
-    ) {
+
+    // Helper methods
+    private fun scanCode(activity: FragmentActivity, scannerView: CodeScannerView) {
         codeScanner = CodeScanner(activity, scannerView)
         codeScanner.apply {
             camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
@@ -76,7 +80,6 @@ class QRScannerImplFragment : Fragment() {
             }
         }
     }
-
     private fun insertQRInformationToDatabase(it: Result) {
         val contents = it.text
 
@@ -108,7 +111,6 @@ class QRScannerImplFragment : Fragment() {
             Toast.makeText(context, "QR contents are null", Toast.LENGTH_SHORT).show()
         }
     }
-
     private fun setEntityInformation(prescriptionsArray: JSONArray) =
         (0 until prescriptionsArray.length()).map { i ->
             val prescriptionObject = prescriptionsArray.getJSONObject(i)
@@ -128,13 +130,7 @@ class QRScannerImplFragment : Fragment() {
                 expirationDate = "N/A"
             )
         }
-
-    private fun initiateDialog(
-        prescriptionDao: PrescriptionDao,
-        prescriptionEntities: List<PrescriptionEntity>
-    ) {
-
-
+    private fun initiateDialog(prescriptionDao: PrescriptionDao, prescriptionEntities: List<PrescriptionEntity>) {
         AlertDialog.Builder(context)
             .setTitle("Download Instructions?")
             .setCancelable(true)
@@ -148,36 +144,29 @@ class QRScannerImplFragment : Fragment() {
                 }
                 Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.frame_layout,
-                        InstructionsFragment.newInstance()
-                    )
-                    .addToBackStack("InstructionFragment")
-                    .commit()
+                (activity as? MainActivity)?.onQRContentDownloaded()
 
             }
             .setNegativeButton("No") { dialogInterface, _ ->
                 Toast.makeText(context, "Instructions not Uploaded", Toast.LENGTH_LONG).show()
-                dialogInterface.dismiss() // nothing is done
+                dialogInterface.dismiss()
+                (activity as? MainActivity)?.onQRContentNotDownloaded()
             }.show()
     }
 
+
+    // Lifecycle methods
     override fun onResume() {
         super.onResume()
         codeScanner.startPreview()
     }
-
     override fun onPause() {
         codeScanner.releaseResources()
         super.onPause()
     }
 
-
     companion object {
         @JvmStatic
-        fun newInstance() =
-            QRScannerImplFragment().apply {
-            }
+        fun newInstance() = QRScannerImplFragment()
     }
 }
