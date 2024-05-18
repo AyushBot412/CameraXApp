@@ -18,9 +18,7 @@ class QRScannerButtonFragment : Fragment() {
     }
     private var listener: QRScannerButtonListener? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): RelativeLayout? {
         viewBinding = FragmentQrScannerButtonBinding.inflate(inflater, container, false)
 

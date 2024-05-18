@@ -31,11 +31,8 @@ class InstructionsFragment : Fragment() {
 
         // Initialize RecyclerView and Adapter
         val recyclerView: RecyclerView = view.findViewById(R.id.prescriptionRecyclerView)
-        adapter = PrescriptionAdapter({ selectedPrescription ->
-            handlePrescriptionClick(selectedPrescription)
-        }) { selectedPrescription ->
-            openExpirationFragment(selectedPrescription)
-        }
+        adapter = PrescriptionAdapter({ selectedPrescription -> handlePrescriptionClick(selectedPrescription) })
+        { selectedPrescription -> openExpirationFragment(selectedPrescription)}
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())

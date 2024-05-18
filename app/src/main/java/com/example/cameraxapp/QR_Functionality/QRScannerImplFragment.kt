@@ -85,18 +85,10 @@ class QRScannerImplFragment : Fragment() {
 
         if (contents != null) {
             try {
-                // Parse text content
-                val jsonContentFromQrCode = contents
+                Log.d("QR_CODE_CONTENT", contents)
 
-                // Converting to JSON and getting Prescriptions array
-                Log.d("QR_CODE_CONTENT", jsonContentFromQrCode)
-
-                val prescriptionsArray = JSONArray(jsonContentFromQrCode)
-
-                // Getting access to be able to perform db operations
+                val prescriptionsArray = JSONArray(contents)
                 val prescriptionDao = (requireActivity().application as AppApplication).db.prescriptionDao()
-
-                // Setting each entity information
                 val prescriptionEntities = setEntityInformation(prescriptionsArray)
 
                 // Dialog Box
