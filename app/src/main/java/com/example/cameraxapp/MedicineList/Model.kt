@@ -1,4 +1,4 @@
-package com.example.cameraxapp.PrescriptionList
+package com.example.cameraxapp.MedicineList
 
 import com.example.cameraxapp.Room.Entity
 

@@ -1,7 +1,8 @@
 package com.example.cameraxapp
 
-import Adapter
+import com.example.cameraxapp.MedicineList.Adapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cameraxapp.PrescriptionList.Model
+import com.example.cameraxapp.MedicineList.Model
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.Dao
 import kotlinx.coroutines.launch
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class InstructionsFragment : Fragment() {
     private lateinit var adapter : Adapter
     private val modelList: MutableList<Model> = mutableListOf()
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_instructions, container, false)
@@ -28,14 +30,8 @@ class InstructionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize RecyclerView and Adapter
-        val recyclerView: RecyclerView = view.findViewById(R.id.prescriptionRecyclerView)
+        recyclerView = view.findViewById(R.id.prescriptionRecyclerView)
         val emptyInstructionsFragment: TextView = view.findViewById(R.id.empty_instructions);
-
-        adapter = Adapter({ selectedPrescription -> handleMedicineClick(selectedPrescription) })
-        { selectedPrescription -> openExpirationFragment(selectedPrescription)}
-
-        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val application = requireActivity().application as AppApplication
@@ -44,31 +40,35 @@ class InstructionsFragment : Fragment() {
         // Retrieve medicine data from the database
         lifecycleScope.launch {
 
-            dao.getPrescription().collect() { medicineEntities ->
-                val prescription = medicineEntities.map { entity ->
-                    Model(
-                        medicineName = entity.medicineName,
-                        details = Model.Details.fromMedicineEntity(entity),
-                        isExpanded = false // Initially set to false for collapsed state
-                    )
+            try {
+                dao.getPrescription().collect() { medicineEntities ->
+                    val prescription = medicineEntities.map { entity ->
+                        Model(
+                            medicineName = entity.medicineName,
+                            details = Model.Details.fromMedicineEntity(entity),
+                            isExpanded = false // Initially set to false for collapsed state
+                        )
+                    }
+
+                    modelList.clear()
+                    modelList.addAll(prescription)
+
+                    if (modelList.isEmpty()) {
+                        recyclerView.visibility = View.GONE
+                        emptyInstructionsFragment.visibility = View.VISIBLE
+                    } else {
+                        adapter = Adapter(modelList) { selectedMedicine ->
+                            openExpirationFragment(
+                                selectedMedicine
+                            )
+                        }
+                        recyclerView.adapter = adapter
+                    }
                 }
-                modelList.clear()
-                modelList.addAll(prescription)
-                if(modelList.isEmpty()){
-                    recyclerView.visibility = View.GONE
-                    emptyInstructionsFragment.visibility = View.VISIBLE
-                }
-                adapter.updateList(modelList)
+            }  catch (e: Exception) {
+                Log.e("InstructionFragment", "Error: ${e.message}", e)
             }
         }
-
-
-    }
-
-
-    private fun handleMedicineClick(selectedMedicine: Model) {
-        selectedMedicine.isExpanded = !selectedMedicine.isExpanded
-        adapter.notifyItemChanged(modelList.indexOf(selectedMedicine))
     }
 
     private fun openExpirationFragment(selectedMedicine: Model) {

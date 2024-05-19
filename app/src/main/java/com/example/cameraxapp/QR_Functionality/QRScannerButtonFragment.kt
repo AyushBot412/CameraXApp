@@ -19,11 +19,10 @@ class QRScannerButtonFragment : Fragment() {
         viewBinding = FragmentQrScannerButtonBinding.inflate(inflater, container, false)
 
         val requestCamera = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
-            } else {
+            if (it)
+                    (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
+            else
                 Toast.makeText(context, "Need camera permission", Toast.LENGTH_SHORT).show()
-            }
         }
 
         viewBinding?.qrScannerBtn?.setOnClickListener{
