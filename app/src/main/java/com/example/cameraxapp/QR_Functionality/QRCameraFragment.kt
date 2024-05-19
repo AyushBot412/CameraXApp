@@ -1,12 +1,9 @@
 package com.example.cameraxapp.QR_Functionality
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -19,25 +16,24 @@ import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
-import com.example.cameraxapp.InstructionsFragment
 import com.example.cameraxapp.MainActivity
 import com.example.cameraxapp.R
 import com.example.cameraxapp.Room.AppApplication
-import com.example.cameraxapp.Room.PrescriptionDao
-import com.example.cameraxapp.Room.PrescriptionEntity
+import com.example.cameraxapp.Room.Dao
+import com.example.cameraxapp.Room.Entity
 import com.google.zxing.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 
 
-class QRScannerImplFragment : Fragment() {
+class QRCameraFragment : Fragment() {
     private lateinit var codeScanner: CodeScanner
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_qr_scanner_impl, container, false)
+        return inflater.inflate(R.layout.fragment_qr_camera, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,6 +50,7 @@ class QRScannerImplFragment : Fragment() {
 
     // Helper methods
     private fun scanCode(activity: FragmentActivity, scannerView: CodeScannerView) {
+
         codeScanner = CodeScanner(activity, scannerView)
         codeScanner.apply {
             camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
@@ -88,7 +85,7 @@ class QRScannerImplFragment : Fragment() {
                 Log.d("QR_CODE_CONTENT", contents)
 
                 val prescriptionsArray = JSONArray(contents)
-                val prescriptionDao = (requireActivity().application as AppApplication).db.prescriptionDao()
+                val prescriptionDao = (requireActivity().application as AppApplication).db.Dao()
                 val prescriptionEntities = setEntityInformation(prescriptionsArray)
 
                 // Dialog Box
@@ -100,7 +97,7 @@ class QRScannerImplFragment : Fragment() {
             }
         }
         else {
-            Toast.makeText(context, "QR contents are null", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "QR contents are empty", Toast.LENGTH_SHORT).show()
         }
     }
     private fun setEntityInformation(prescriptionsArray: JSONArray) =
@@ -111,7 +108,7 @@ class QRScannerImplFragment : Fragment() {
             val rightEyeSelected = eyeSelectionObject.getBoolean("right")
             val bothEyesSelected = eyeSelectionObject.getBoolean("both")
 
-            PrescriptionEntity(
+            Entity(
                 medicineName = prescriptionObject.getString("medicineName"),
                 leftEyeSelected = leftEyeSelected,
                 rightEyeSelected = rightEyeSelected,
@@ -122,15 +119,15 @@ class QRScannerImplFragment : Fragment() {
                 expirationDate = "N/A"
             )
         }
-    private fun initiateDialog(prescriptionDao: PrescriptionDao, prescriptionEntities: List<PrescriptionEntity>) {
+    private fun initiateDialog(dao: Dao, prescriptionEntities: List<Entity>) {
         AlertDialog.Builder(context)
             .setTitle("Download Instructions?")
-            .setCancelable(true)
+            .setCancelable(false)
             .setPositiveButton("Yes") { dialogInterface, _ ->
 
                 // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
                 lifecycleScope.launch(Dispatchers.IO) {
-                    prescriptionDao.insertAll(prescriptionEntities)
+                    dao.insertAll(prescriptionEntities)
                 }
                 Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
@@ -152,10 +149,5 @@ class QRScannerImplFragment : Fragment() {
     override fun onPause() {
         codeScanner.releaseResources()
         super.onPause()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = QRScannerImplFragment()
     }
 }

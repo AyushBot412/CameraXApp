@@ -6,13 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".InstructionsFragment"
     android:background="@color/ourBlue"
+    android:orientation="vertical"
+    android:gravity="center"
     >
+
+    <TextView
+        android:id="@+id/empty_instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Prescription(s) Added"
+        android:textSize="35sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/prescriptionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:textSize="35sp"
+        android:padding="10dp"
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 

@@ -44,7 +44,7 @@ import com.example.cameraxapp.R.drawable.flash_on_icon_background
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.cameraxapp.Room.AppApplication
-import com.example.cameraxapp.Room.PrescriptionDao
+import com.example.cameraxapp.Room.Dao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,7 +67,7 @@ class ExpDateFragment : Fragment() {
     private lateinit var enableTorchLF: ListenableFuture<Void>
     private var zoomSeekBar : SeekBar? = null
 
-    private lateinit var prescriptionDao: PrescriptionDao
+    private lateinit var dao: Dao
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -104,19 +104,19 @@ class ExpDateFragment : Fragment() {
         }
 
         val application = requireActivity().application as AppApplication
-        prescriptionDao = application.db.prescriptionDao()
+        dao = application.db.Dao()
 
         // Retrieve prescription name from arguments
-        val prescriptionName = arguments?.getString("prescriptionName")
+        val medicineName = arguments?.getString("medicineName")
 
         // Observe changes to the expiration date
         viewModel.expDate.observe(viewLifecycleOwner) { date ->
             // Update the expiration date in the database
-            prescriptionName?.let { name ->
+            medicineName?.let { name ->
                 //Toast.makeText(requireContext(), "Here is ${name} with ${date}", Toast.LENGTH_SHORT).show()
                 lifecycleScope.launch {
                     withContext(Dispatchers.IO) {
-                        prescriptionDao.updateExpirationDateByName(name, date)
+                        dao.editExpirationDate(name, date)
                     }
                 }
             }

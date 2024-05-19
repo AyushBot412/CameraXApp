@@ -18,10 +18,10 @@ This satisfies the following conditions:
 
  */
 
-@Database(entities = [PrescriptionEntity::class], version = 1)
+@Database(entities = [Entity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun prescriptionDao(): PrescriptionDao
+    abstract fun Dao(): Dao
 
     companion object {
         @Volatile

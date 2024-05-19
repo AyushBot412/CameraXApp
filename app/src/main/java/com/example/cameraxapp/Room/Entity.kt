@@ -5,13 +5,13 @@ import androidx.room.Entity
 
 /*
 The follow class represents tables in our app's database.
-Each instance of an Entity data class represents a row in a table for prescriptions in the app's database.
+Each instance of an Entity data class represents a row in a table for medicines in the app's database.
 Essentially, we're creating a "template" for each row in our future database table, by specifying the columns.
  */
 
-// TODO: can medicine name by primary key?
-@Entity(tableName = "prescriptions_table", primaryKeys = ["medicineName"])
-data class PrescriptionEntity(
+//TODO: change to medicine
+@Entity(tableName = "medicines_table", primaryKeys = ["medicineName"])
+data class Entity(
     @ColumnInfo(name = "medicineName") val medicineName: String,
     @ColumnInfo(name = "leftEyeSelected") val leftEyeSelected: Boolean,
     @ColumnInfo(name = "rightEyeSelected") val rightEyeSelected: Boolean,

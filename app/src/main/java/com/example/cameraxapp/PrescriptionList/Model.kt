@@ -1,11 +1,11 @@
 package com.example.cameraxapp.PrescriptionList
 
-import com.example.cameraxapp.Room.PrescriptionEntity
+import com.example.cameraxapp.Room.Entity
 
 /*
 This class is the model and is structured this way to help in creating an Expandable RecyclerView
  */
-data class PrescriptionModel(
+data class Model(
     val medicineName: String,
     val details: Details,
     var isExpanded: Boolean = false // Initially set to false for collapsed state
@@ -17,7 +17,7 @@ data class PrescriptionModel(
         val expirationDate: String
     ){
         companion object {
-            fun fromPrescriptionEntity(entity: PrescriptionEntity): Details {
+            fun fromMedicineEntity(entity: Entity): Details {
                 val eye = when {
                     entity.leftEyeSelected -> "Left"
                     entity.rightEyeSelected -> "Right"

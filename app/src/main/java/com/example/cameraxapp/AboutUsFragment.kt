@@ -21,11 +21,4 @@ class AboutUsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_about_us, container, false)
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AboutUsFragment().apply {
-            }
-    }
-
 }

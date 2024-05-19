@@ -4,9 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cameraxapp.PrescriptionList.PrescriptionModel
+import com.example.cameraxapp.PrescriptionList.Model
 import com.example.cameraxapp.R
 
 /*
@@ -15,25 +14,25 @@ It converts data from the data sources into view items that can be displayed in 
 
 Expandable Recyclerview has also been created and this class shows two ViewHolders for it.
  */
-class PrescriptionAdapter(
-    private val onItemClick: (PrescriptionModel) -> Unit, private val onExpirationButtonClick: (PrescriptionModel) -> Unit,  // Callback for item click events
+class Adapter(
+    private val onItemClick: (Model) -> Unit, private val onExpirationButtonClick: (Model) -> Unit,  // Callback for item click events
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val prescriptionModelList: MutableList<PrescriptionModel> = mutableListOf()
+    private val modelList: MutableList<Model> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             COLLAPSED_VIEW_TYPE -> {
-                CollapsedViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.prescription_item_collapsed, parent, false))
+                CollapsedViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.medicine_item_collapsed, parent, false))
             }
             EXPANDED_VIEW_TYPE -> {
-                ExpandedViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.prescription_item_expanded, parent, false))
+                ExpandedViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.medicine_item_expanded, parent, false))
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
-    override fun getItemCount(): Int = prescriptionModelList.size
+    override fun getItemCount(): Int = modelList.size
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val prescription = prescriptionModelList[position]
+        val prescription = modelList[position]
 
         when (holder) {
             is CollapsedViewHolder -> holder.bind(prescription)
@@ -42,13 +41,13 @@ class PrescriptionAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (prescriptionModelList[position].isExpanded) EXPANDED_VIEW_TYPE else COLLAPSED_VIEW_TYPE
+        return if (modelList[position].isExpanded) EXPANDED_VIEW_TYPE else COLLAPSED_VIEW_TYPE
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newList: List<PrescriptionModel>) {
-        prescriptionModelList.clear()
-        prescriptionModelList.addAll(newList)
+    fun updateList(newList: List<Model>) {
+        modelList.clear()
+        modelList.addAll(newList)
         notifyDataSetChanged()
     }
 
@@ -57,16 +56,16 @@ class PrescriptionAdapter(
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val model = prescriptionModelList[position]
+                    val model = modelList[position]
                     model.isExpanded = !model.isExpanded
                     notifyItemChanged(position)
                 }
             }
         }
 
-        fun bind(prescriptionModel: PrescriptionModel) {
+        fun bind(model: Model) {
             // Bind data to views for collapsed state
-            itemView.findViewById<TextView>(R.id.prescriptionNameTextView).text = prescriptionModel.medicineName
+            itemView.findViewById<TextView>(R.id.medicineNameTextView).text = model.medicineName
         }
     }
 
@@ -76,22 +75,22 @@ class PrescriptionAdapter(
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val model = prescriptionModelList[position]
+                    val model = modelList[position]
                     model.isExpanded = !model.isExpanded
                     notifyItemChanged(position)
                 }
             }
         }
 
-        fun bind(prescriptionModel: PrescriptionModel) {
+        fun bind(model: Model) {
             // Bind data to views for expanded state
-            itemView.findViewById<TextView>(R.id.prescriptionNameTextView).text = prescriptionModel.medicineName
-            itemView.findViewById<TextView>(R.id.eyeTextView).text = prescriptionModel.details.eye
-            itemView.findViewById<TextView>(R.id.frequencyTextView).text = prescriptionModel.details.frequency
-            itemView.findViewById<TextView>(R.id.specialInstructionsTextView).text = prescriptionModel.details.specialInstruction
-            itemView.findViewById<TextView>(R.id.expirationDateTextView).text = prescriptionModel.details.expirationDate
+            itemView.findViewById<TextView>(R.id.medicineNameTextView).text = model.medicineName
+            itemView.findViewById<TextView>(R.id.eyeTextView).text = model.details.eye
+            itemView.findViewById<TextView>(R.id.frequencyTextView).text = model.details.frequency
+            itemView.findViewById<TextView>(R.id.specialInstructionsTextView).text = model.details.specialInstruction
+            itemView.findViewById<TextView>(R.id.expirationDateTextView).text = model.details.expirationDate
             addExpirationDateButton.setOnClickListener {
-                onExpirationButtonClick(prescriptionModel)
+                onExpirationButtonClick(model)
             }
         }
     }

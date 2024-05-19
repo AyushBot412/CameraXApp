@@ -5,51 +5,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.example.cameraxapp.MainActivity
 import com.example.cameraxapp.databinding.FragmentQrScannerButtonBinding
-
 
 class QRScannerButtonFragment : Fragment() {
     private var viewBinding: FragmentQrScannerButtonBinding? = null
-
-    // Use interface and listener so fragment communicates action to Main.
-    interface QRScannerButtonListener {
-        fun onQRScannerButtonClicked()
-    }
-    private var listener: QRScannerButtonListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): RelativeLayout? {
         viewBinding = FragmentQrScannerButtonBinding.inflate(inflater, container, false)
 
+        val requestCamera = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
+            } else {
+                Toast.makeText(context, "Need camera permission", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         viewBinding?.qrScannerBtn?.setOnClickListener{
-            listener?.onQRScannerButtonClicked()
+            requestCamera.launch(android.Manifest.permission.CAMERA)
         }
 
         return viewBinding?.root
     }
 
-    // The following are lifecycle methods which help the fragment and the activity know when they're
-    // connected and when they're not, and to communicate to each other using the interface.
 
-    // onAttach: attaches fragment to Main, helping the fragment know that Main has implemented the listener
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is QRScannerButtonListener) {
-            listener = context
-        } else {
-            throw RuntimeException("$context must implement OnQRScannerListener")
-        }
-    }
-
-    // onDetach: fragment is no longer connected to Main, listener becomes null.
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() = QRScannerButtonFragment()
-    }
 }
