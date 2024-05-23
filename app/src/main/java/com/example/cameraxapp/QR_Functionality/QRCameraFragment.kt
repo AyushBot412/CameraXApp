@@ -127,7 +127,7 @@ class QRCameraFragment : Fragment() {
 
                 // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
                 lifecycleScope.launch(Dispatchers.IO) {
-                    dao.insertAll(prescriptionEntities)
+                    dao.insertPrescription(prescriptionEntities)
                 }
                 Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
