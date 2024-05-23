@@ -10,10 +10,12 @@ import kotlinx.coroutines.flow.Flow
 /*
 The following class defines and provides methods that our app can use to query, update, insert, and delete data in our created database.
  */
+
+// TODO: Will need to revamp some of the functions here to create CRUD methodology
 @Dao
 interface Dao {
 
-    // Create Methods
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(medicineEntity: Entity): Long
     @Transaction
@@ -23,7 +25,6 @@ interface Dao {
          }
      }
 
-    // Read Methods:
     @Query("SELECT * FROM medicines_table")
      fun getPrescription(): Flow<List<Entity>>
 
@@ -33,15 +34,41 @@ interface Dao {
     @Query("UPDATE medicines_table SET expirationDate = :newExpirationDate WHERE medicineName = :medicineName")
     suspend fun editExpirationDate(medicineName: String, newExpirationDate: String)
 
-     // Update Methods:
+    // CRUD: (Prescriptions & Medicine)
 
-     // Delete Methods:
+    // C:
+    // insertPrescription()
+    // One Scan QR Code button is pressed, the prescription should be inserted into DB
+    // If button is pressed again, a new prescription overwrites old one.
+
+    // insertMedicine()
+    // todo: write definition of what this function does
+
+    // R:
+    // getPrescription()
+    // When user navigates to instruction fragments, they should see their prescription
+    // getMedicine()
+    // todo: write definition of what this function does
+
+    // U:
+    // updatePrescription()
+    // todo: write definition of what this function does
+    // updateMedicine()
+    // todo: definition of what this function does
+
+    // D:
+    // deletePrescription()
+    // There should be a delete button in the top corner of the prescription card, user presses it and the prescription is deleted.
+    // deleteMedicine()
+    // There should be a delete button in front of every medicine card, user presses it and the medicine is deleted
 
 
 
 
 
-     // CRUD: (Prescriptions & Medicine)
+
+    // SCRATCH NOTES BELOW, DO NOT MIND
+
      // C:
             // scan qr code,
                     // insertPrescription()
@@ -74,11 +101,4 @@ interface Dao {
                 // - Ask Dr. Lin if they ever want to delete the prescription
             // deleteMedicine()?
                 // - Ask Dr. Lin if they ever want to medicine or will the clinic just make a new prescription?
-
-
-
-
-     // tests
-    // 1. Testing scanning same medicine twice: reinserts the same medicine with updated fields (exp date is gone)
-    // TODO: Update if medicine is already in there instead of re-inserting
 }
