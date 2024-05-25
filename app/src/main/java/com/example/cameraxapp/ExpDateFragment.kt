@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
@@ -70,6 +71,15 @@ class ExpDateFragment : Fragment() {
 
     private lateinit var dao: Dao
 
+    private val timer = object: CountDownTimer(20000, 1000) {
+        override fun onTick(millisUntilFinished: Long) { }
+        override fun onFinish() {
+            // reached 20 seconds
+            
+
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -89,8 +99,6 @@ class ExpDateFragment : Fragment() {
             // Turn torch on when the button is clicked
             toggleTorch()
         }
-
-
 
         //Request camera permissions
         if (allPermissionsGranted()) {
@@ -332,6 +340,13 @@ class ExpDateFragment : Fragment() {
         }
     }
 
+    private fun startTimer() {
+        timer.start()
+    }
+
+    private fun stopTimer() {
+        timer.cancel()
+    }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         activity?.let { it1 -> ContextCompat.checkSelfPermission(it1.baseContext, it) } == PackageManager.PERMISSION_GRANTED
