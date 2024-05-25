@@ -13,7 +13,10 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
@@ -47,6 +50,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.Dao
+import kotlinx.android.synthetic.main.fragment_exp_camera.view.conditionalLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -71,11 +75,19 @@ class ExpDateFragment : Fragment() {
 
     private lateinit var dao: Dao
 
-    private val timer = object: CountDownTimer(20000, 1000) {
+    private lateinit var retryButton: Button
+    private lateinit var conditionalLayout: View
+
+    private var isTimedOut: Boolean = false
+
+    private val timer = object: CountDownTimer(5000, 1000) {
         override fun onTick(millisUntilFinished: Long) { }
         override fun onFinish() {
             // reached 20 seconds
-            
+            Log.w("timer test", "asdf")
+
+            conditionalLayout.visibility = VISIBLE
+            isTimedOut = true
 
         }
     }
@@ -86,6 +98,7 @@ class ExpDateFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         viewBinding =  FragmentExpCameraBinding.inflate(inflater, container, false)
+        val rootView = viewBinding.root
 
         t1 = TextToSpeech(activity) {
             if (it != TextToSpeech.ERROR) {
@@ -111,6 +124,23 @@ class ExpDateFragment : Fragment() {
             }
             startCamera()
         }
+
+        conditionalLayout = rootView.findViewById(R.id.conditionalLayout)
+        retryButton = conditionalLayout.findViewById(R.id.conditionalButton)
+
+        retryButton.setOnClickListener {
+            Log.w("retry button", "clicked")
+
+            // reset timer to 0
+            startTimer()
+            // set dim to false
+
+            isTimedOut = false
+            conditionalLayout.visibility = INVISIBLE
+
+        }
+
+        startTimer()
 
         val application = requireActivity().application as AppApplication
         dao = application.db.Dao()
@@ -176,7 +206,14 @@ class ExpDateFragment : Fragment() {
             }
         }
         fun setExpDate(date: String) {
+            if (isTimedOut) {
+                // dont do popup
+                return
+            }
             viewModel.setExpDate(date)
+            // create toast for success, then after like 2 seconds reroute to instructions fragment
+            Toast.makeText(requireContext(), "Success", Toast.LENGTH_LONG).show()
+            // (go back previous fragment state)
         }
     }
 
@@ -266,6 +303,8 @@ class ExpDateFragment : Fragment() {
 
 
     }
+
+
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpTapToFocusAndPinchToZoom(cameraControl: CameraControl, cameraInfo: CameraInfo?) {

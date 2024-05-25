@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:elevation="8dp"
-    android:visibility="gone">
+    android:visibility="invisible"
+    >
     <!-- Initially hidden -->
 
     <TextView
