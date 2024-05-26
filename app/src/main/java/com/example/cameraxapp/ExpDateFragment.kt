@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -58,6 +60,7 @@ import kotlinx.coroutines.withContext
 
 class ExpDateFragment : Fragment() {
     private lateinit var viewBinding: FragmentExpCameraBinding
+    val instructionsFragment : Fragment = InstructionsFragment()
     private var imageCapture: ImageCapture? = null
     private val viewModel: SharedViewModel by activityViewModels()
 
@@ -210,10 +213,35 @@ class ExpDateFragment : Fragment() {
                 // dont do popup
                 return
             }
+            timer.cancel()
             viewModel.setExpDate(date)
             // create toast for success, then after like 2 seconds reroute to instructions fragment
-            Toast.makeText(requireContext(), "Success", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+
+            val newFragment = InstructionsFragment()  // Replace with your specific fragment
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.frame_layout, newFragment)
+            transaction.commit()
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                // Navigate back to the previous fragment
+//
+//            }, 2000)
+
+
+
+//            val count = parentFragmentManager.backStackEntryCount
+//            Log.d("BackStack", "Total Entries: $count")
+//            for (i in 0 until count) {
+//                val entry = parentFragmentManager.getBackStackEntryAt(i)
+//                Log.d("BackStack", "Entry $i: ${entry.name}")
+//            }
+
+
             // (go back previous fragment state)
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                // Navigate back to the previous fragment
+//                parentFragmentManager.popBackStack()
+//            }, 2000)
         }
     }
 
