@@ -2,25 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:elevation="8dp"
-    android:visibility="invisible"
-    >
+    android:visibility="invisible">
     <!-- Initially hidden -->
 
     <TextView
         android:id="@+id/conditionalTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:text="Conditional text"
-        android:textSize="18sp"
+        android:text="Failed to read expiration date"
+        android:gravity="center"
+        android:textSize="32sp"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:background="@drawable/textview_attributes"/>
 
     <Button
         android:id="@+id/conditionalButton"
-        android:layout_width="match_parent"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:text="Click Button" />
+        android:text="Try Again"
+        android:textSize="30sp"
+        android:textColor="@color/pictonBlue"
+        android:backgroundTint="@color/white"
+        />
 </LinearLayout>

@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -36,7 +34,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.cameraxapp.databinding.FragmentCameraBinding
 import com.example.cameraxapp.databinding.FragmentExpCameraBinding
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.common.InputImage
@@ -52,7 +49,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.Dao
-import kotlinx.android.synthetic.main.fragment_exp_camera.view.conditionalLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -80,6 +76,7 @@ class ExpDateFragment : Fragment() {
 
     private lateinit var retryButton: Button
     private lateinit var conditionalLayout: View
+    private lateinit var dimOverlayView: View
 
     private var isTimedOut: Boolean = false
 
@@ -90,6 +87,7 @@ class ExpDateFragment : Fragment() {
             Log.w("timer test", "asdf")
 
             conditionalLayout.visibility = VISIBLE
+            dimOverlayView.visibility = VISIBLE
             isTimedOut = true
 
         }
@@ -130,6 +128,7 @@ class ExpDateFragment : Fragment() {
 
         conditionalLayout = rootView.findViewById(R.id.conditionalLayout)
         retryButton = conditionalLayout.findViewById(R.id.conditionalButton)
+        dimOverlayView = rootView.findViewById(R.id.dimOverlay)
 
         retryButton.setOnClickListener {
             Log.w("retry button", "clicked")
@@ -140,7 +139,7 @@ class ExpDateFragment : Fragment() {
 
             isTimedOut = false
             conditionalLayout.visibility = INVISIBLE
-
+            dimOverlayView.visibility = INVISIBLE
         }
 
         startTimer()
@@ -218,9 +217,9 @@ class ExpDateFragment : Fragment() {
             // create toast for success, then after like 2 seconds reroute to instructions fragment
             Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
 
-            val newFragment = InstructionsFragment()  // Replace with your specific fragment
             val transaction = parentFragmentManager.beginTransaction()
-            transaction.replace(R.id.frame_layout, newFragment)
+            transaction.replace(R.id.frame_layout, instructionsFragment)
+            transaction.addToBackStack(null)
             transaction.commit()
 //            Handler(Looper.getMainLooper()).postDelayed({
 //                // Navigate back to the previous fragment
