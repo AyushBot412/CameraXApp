@@ -7,6 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
+        android:iconTint="#808080"
         android:id="@+id/navigation_about_us"
         android:icon="@drawable/baseline_group_24"
         />
@@ -15,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
+        android:iconTint="#808080"
         android:id="@+id/navigation_bottle_scanner"
         android:icon="@drawable/camera_icon"
         />
@@ -23,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
+        android:iconTint="#808080"
         android:id="@+id/navigation_qr"
         android:icon="@drawable/qr_icon"
         />
@@ -31,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title=""
+        android:iconTint="#808080"
         android:id="@+id/navigation_instructions"
         android:icon="@drawable/instructions_icon" />
 </menu>

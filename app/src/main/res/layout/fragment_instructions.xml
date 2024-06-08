@@ -7,15 +7,14 @@
     tools:context=".InstructionsFragment"
     android:background="@color/ourBlue"
     android:orientation="vertical"
-    android:gravity="center"
-    >
+    android:gravity="center">
 
     <TextView
         android:id="@+id/empty_instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Prescription(s) Added"
-        android:textSize="35sp"
+        android:text="No Medicine(s) Added"
+        android:textSize="25sp"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:padding="10dp"

@@ -63,7 +63,7 @@ class InstructionsFragment : Fragment() {
                     updateButtonVisibility()
 
                     addMedicineButton.setOnClickListener {
-                        (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
+                        addMedicine()
                     }
 
                     deletePrescriptionButton.setOnClickListener {
@@ -91,6 +91,22 @@ class InstructionsFragment : Fragment() {
                 Log.e("InstructionFragment", "Error: ${e.message}", e)
             }
         }
+    }
+
+    private fun addMedicine() {
+            AlertDialog.Builder(context, R.style.RedBorderAlertDialog)
+                .setTitle("Warning!")
+                .setMessage("Only Add Medicine If Instructed By Healthcare Professional")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialogInterface, _ ->
+
+                    (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
+                    dialogInterface.dismiss()
+                }
+                .setNegativeButton("No") { dialogInterface, _ ->
+                    Toast.makeText(context, "Medicine Not Added", Toast.LENGTH_LONG).show()
+                    dialogInterface.dismiss()
+                }.show()
     }
 
     private fun openExpirationFragment(selectedMedicine: Model) {
