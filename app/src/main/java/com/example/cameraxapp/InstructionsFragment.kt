@@ -1,19 +1,25 @@
 package com.example.cameraxapp
 
+import android.app.AlertDialog
 import com.example.cameraxapp.MedicineList.Adapter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cameraxapp.MedicineList.Model
+import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.Dao
+import com.example.cameraxapp.Room.Entity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -21,6 +27,8 @@ class InstructionsFragment : Fragment() {
     private lateinit var adapter : Adapter
     private val modelList: MutableList<Model> = mutableListOf()
     private lateinit var recyclerView: RecyclerView
+    private lateinit var deletePrescriptionButton: Button
+    private lateinit var addMedicineButton: Button
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_instructions, container, false)
@@ -33,6 +41,8 @@ class InstructionsFragment : Fragment() {
         recyclerView = view.findViewById(R.id.prescriptionRecyclerView)
         val emptyInstructionsFragment: TextView = view.findViewById(R.id.empty_instructions);
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        deletePrescriptionButton = view.findViewById(R.id.deletePrescriptionButton)
+        addMedicineButton = view.findViewById(R.id.addMedicineButton)
 
         val application = requireActivity().application as AppApplication
         val dao: Dao = application.db.Dao()
@@ -53,15 +63,28 @@ class InstructionsFragment : Fragment() {
                     modelList.clear()
                     modelList.addAll(prescription)
 
+                    // Check if there are prescriptions
+                    updateButtonVisibility()
+
+                    // Set click listener for delete button
+                    deletePrescriptionButton.setOnClickListener {
+                        deletePrescription(modelList)
+                    }
+
                     if (modelList.isEmpty()) {
                         recyclerView.visibility = View.GONE
                         emptyInstructionsFragment.visibility = View.VISIBLE
-                    } else {
-                        adapter = Adapter(modelList) { selectedMedicine ->
-                            openExpirationFragment(
-                                selectedMedicine
-                            )
-                        }
+                    }
+                    else {
+
+                        adapter = Adapter(modelList,
+                            onExpirationButtonClick = { selectedMedicine ->
+                                openExpirationFragment(selectedMedicine)
+                            },
+                            onDeleteMedicineClick = { selectedMedicine ->
+                                deleteMedicine(selectedMedicine)
+                            }
+                        )
                         recyclerView.adapter = adapter
                     }
                 }
@@ -79,4 +102,67 @@ class InstructionsFragment : Fragment() {
         }
         (activity as? MainActivity)?.replaceFragment(expirationFragment)
     }
+    private fun deleteMedicine(selectedMedicine: Model) {
+        val application = requireActivity().application as AppApplication
+        val dao: Dao = application.db.Dao()
+
+        AlertDialog.Builder(context, R.style.RedBorderAlertDialog)
+            .setTitle("Warning!")
+            .setMessage("Only Delete Medicine If Instructed By Healthcare Professional")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialogInterface, _ ->
+
+                // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
+                lifecycleScope.launch {
+                    dao.deleteMedicine(selectedMedicine.medicineName)
+                    modelList.removeAll { it.medicineName ==  selectedMedicine.medicineName }
+                    adapter.notifyDataSetChanged()
+
+                }
+                Toast.makeText(context, "Medicine Deleted", Toast.LENGTH_LONG).show()
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton("No") { dialogInterface, _ ->
+                Toast.makeText(context, "Medicine Not Deleted", Toast.LENGTH_LONG).show()
+                dialogInterface.dismiss()
+            }.show()
+    }
+
+    private fun deletePrescription(medicines: MutableList<Model>) {
+        val application = requireActivity().application as AppApplication
+        val dao: Dao = application.db.Dao()
+
+        AlertDialog.Builder(context, R.style.RedBorderAlertDialog)
+            .setTitle("Warning!")
+            .setMessage("Only Delete Prescription If Instructed By Healthcare Professional")
+            .setCancelable(false)
+            .setPositiveButton("Yes") { dialogInterface, _ ->
+
+                // using coroutines to ensure that any db operations are executed off the main UI thread to have smooth user experience.
+                lifecycleScope.launch {
+                    val medicineNamesList = medicines.map { it.medicineName }
+                    dao.deletePrescription(medicineNamesList)
+                    modelList.clear()
+                    adapter.notifyDataSetChanged()
+                    updateButtonVisibility()
+                }
+                Toast.makeText(context, "Prescription Deleted", Toast.LENGTH_LONG).show()
+                dialogInterface.dismiss()
+            }
+            .setNegativeButton("No") { dialogInterface, _ ->
+                Toast.makeText(context, "Prescription Not Deleted", Toast.LENGTH_LONG).show()
+                dialogInterface.dismiss()
+            }.show()
+    }
+
+    private fun updateButtonVisibility() {
+        if (modelList.isNotEmpty()) {
+            deletePrescriptionButton.visibility = View.VISIBLE
+            addMedicineButton.visibility = View.VISIBLE
+        } else {
+            deletePrescriptionButton.visibility = View.GONE
+            addMedicineButton.visibility = View.GONE
+        }
+    }
+
 }

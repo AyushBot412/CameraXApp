@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.example.cameraxapp.MedicineList.Model
 import kotlinx.coroutines.flow.Flow
 
 /*
@@ -25,7 +26,7 @@ interface Dao {
          }
      }
 
-    // TODO: insertMedicine()
+    // TODO: addMedicine()
 
     @Query("SELECT * FROM medicines_table")
      fun getPrescription(): Flow<List<Entity>>
@@ -39,8 +40,10 @@ interface Dao {
     @Query("UPDATE medicines_table SET expirationDate = :newExpirationDate WHERE medicineName = :medicineName")
     suspend fun editExpirationDate(medicineName: String, newExpirationDate: String)
 
-    // TODO: deletePrescription()
+    @Query("DELETE FROM medicines_table WHERE medicineName IN (:medicines)")
+    suspend fun deletePrescription(medicines: List<String>)
 
-    // TODO: deleteMedicine()
+    @Query("DELETE FROM medicines_table WHERE medicineName = :medicineName")
+    suspend fun deleteMedicine(medicineName: String)
 
 }

@@ -1,5 +1,6 @@
 package com.example.cameraxapp.MedicineList
 
+import android.widget.Button
 import com.example.cameraxapp.Room.Entity
 
 /*
@@ -14,7 +15,7 @@ data class Model(
         val eye: String?,
         val frequency: String,
         val specialInstruction: String,
-        val expirationDate: String
+        val expirationDate: String,
     ){
         companion object {
             fun fromMedicineEntity(entity: Entity): Details {
