@@ -1,7 +1,6 @@
 package com.example.cameraxapp
 
 import android.app.AlertDialog
-import com.example.cameraxapp.MedicineList.Adapter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,13 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.cameraxapp.MedicineList.Adapter
 import com.example.cameraxapp.MedicineList.Model
 import com.example.cameraxapp.QR_Functionality.QRCameraFragment
-import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.Dao
-import com.example.cameraxapp.Room.Entity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -35,16 +32,14 @@ class InstructionsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_instructions, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.prescriptionRecyclerView)
-        val emptyInstructionsFragment: TextView = view.findViewById(R.id.empty_instructions);
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         deletePrescriptionButton = view.findViewById(R.id.deletePrescriptionButton)
         addMedicineButton = view.findViewById(R.id.addMedicineButton)
-
+        val emptyInstructionsFragment: TextView = view.findViewById(R.id.empty_instructions);
         val application = requireActivity().application as AppApplication
         val dao: Dao = application.db.Dao()
 
@@ -52,7 +47,7 @@ class InstructionsFragment : Fragment() {
         lifecycleScope.launch {
 
             try {
-                dao.getPrescription().collect() { medicineEntities ->
+                dao.getPrescription().collect { medicineEntities ->
                     val prescription = medicineEntities.map { entity ->
                         Model(
                             medicineName = entity.medicineName,
@@ -71,7 +66,6 @@ class InstructionsFragment : Fragment() {
                         (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
                     }
 
-                    // Set click listener for delete button
                     deletePrescriptionButton.setOnClickListener {
                         deletePrescription(modelList)
                     }
@@ -121,8 +115,6 @@ class InstructionsFragment : Fragment() {
                 lifecycleScope.launch {
                     dao.deleteMedicine(selectedMedicine.medicineName)
                     modelList.removeAll { it.medicineName ==  selectedMedicine.medicineName }
-                    adapter.notifyDataSetChanged()
-
                 }
                 Toast.makeText(context, "Medicine Deleted", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
@@ -148,7 +140,6 @@ class InstructionsFragment : Fragment() {
                     val medicineNamesList = medicines.map { it.medicineName }
                     dao.deletePrescription(medicineNamesList)
                     modelList.clear()
-                    adapter.notifyDataSetChanged()
                     updateButtonVisibility()
                 }
                 Toast.makeText(context, "Prescription Deleted", Toast.LENGTH_LONG).show()
