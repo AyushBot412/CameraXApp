@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#808080"/>
 
     <LinearLayout
         android:id="@+id/layout_details"
@@ -37,7 +38,7 @@
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/medicineNameTextView"
-        />
+        android:textColor="#808080" />
 
     <TextView
         android:id="@+id/eyeTextView"
@@ -50,7 +51,8 @@
         android:paddingEnd="20dp"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eyeLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@id/eyeLabelTextView"
+        android:textColor="#808080"/>
 
     <TextView
         android:id="@+id/frequencyLabelTextView"
@@ -64,7 +66,8 @@
         android:textAllCaps="true"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/eyeTextView" />
+        app:layout_constraintTop_toBottomOf="@id/eyeTextView"
+        android:textColor="#808080"/>
 
     <TextView
         android:id="@+id/frequencyTextView"
@@ -77,7 +80,8 @@
         android:paddingEnd="20dp"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frequencyLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@id/frequencyLabelTextView"
+        android:textColor="#808080"/>
 
     <TextView
         android:id="@+id/specialInstructionsLabelTextView"
@@ -91,7 +95,8 @@
         android:textAllCaps="true"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/frequencyTextView" />
+        app:layout_constraintTop_toBottomOf="@id/frequencyTextView"
+        android:textColor="#808080"/>
 
     <TextView
         android:id="@+id/specialInstructionsTextView"
@@ -104,7 +109,8 @@
         android:paddingEnd="20dp"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/specialInstructionsLabelTextView" />
+        app:layout_constraintTop_toBottomOf="@id/specialInstructionsLabelTextView"
+        android:textColor="#808080"/>
 
     <TextView
         android:id="@+id/expirationDateLabelTextView"
@@ -118,7 +124,8 @@
         android:textAllCaps="true"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/specialInstructionsTextView" />
+        app:layout_constraintTop_toBottomOf="@id/specialInstructionsTextView"
+        android:textColor="#808080"/>
 
     <TextView
         android:id="@+id/expirationDateTextView"
@@ -134,38 +141,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expirationDateLabelTextView"/>
 
-    <Button
-        android:id="@+id/expirationDateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:drawableStart="@drawable/camera_icon"
-        android:drawablePadding="4dp"
-        android:text="Add Exp Date"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/expirationDateTextView"
-        android:clickable="true"/>
-
         <Button
-            android:id="@+id/deleteMedicineButton"
+            android:id="@+id/expirationDateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/deleteRed"
-            android:clickable="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableStart="@drawable/camera_icon"
             android:drawablePadding="4dp"
-            android:focusable="true"
-            android:text="Delete Medicine"
+            android:text="Add Exp Date"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/expirationDateButton" />
+            app:layout_constraintTop_toBottomOf="@+id/expirationDateTextView"
+            android:clickable="true"/>
+        <Button
+                android:id="@+id/deleteMedicineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/deleteRed"
+                android:clickable="true"
+                android:drawablePadding="4dp"
+                android:focusable="true"
+                android:text="Delete Medicine"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/expirationDateButton" />
+
 
     </LinearLayout>
 

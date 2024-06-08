@@ -31,7 +31,7 @@
         android:id="@+id/prescriptionRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/addMedicineButton"
+        app:layout_constraintBottom_toTopOf="@+id/button_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,36 +40,49 @@
         />
 
 
-    <Button
-        android:id="@+id/addMedicineButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Medicine"
-        android:visibility="visible"
+        android:background="?attr/colorPrimary"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="0dp"
-        android:textSize="20sp"
-        android:backgroundTint="@color/white"
-        android:textColor="@color/ourBlue"
-        app:layout_constraintTop_toBottomOf="@id/prescriptionRecyclerView"
-        app:layout_constraintBottom_toTopOf="@id/deletePrescriptionButton"/>
+        app:layout_constraintTop_toBottomOf="@id/prescriptionRecyclerView">
+
+        <Button
+            android:id="@+id/addMedicineButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:backgroundTint="@color/white"
+            android:text="Add Medicine"
+            android:textColor="@color/ourBlue"
+            android:textSize="20sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/deletePrescriptionButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/prescriptionRecyclerView" />
 
 
         <Button
             android:id="@+id/deletePrescriptionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:backgroundTint="@color/white"
             android:text="Delete Prescription"
+            android:textColor="@color/ourBlue"
+            android:textSize="20sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="5dp"
-            android:textSize="20sp"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/ourBlue"
-            app:layout_constraintTop_toBottomOf="@id/addMedicineButton"/>
+            app:layout_constraintTop_toBottomOf="@id/addMedicineButton" />
 
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cameraxapp.MedicineList.Model
+import com.example.cameraxapp.QR_Functionality.QRCameraFragment
 import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
 import com.example.cameraxapp.Room.AppApplication
 import com.example.cameraxapp.Room.Dao
@@ -65,6 +66,10 @@ class InstructionsFragment : Fragment() {
 
                     // Check if there are prescriptions
                     updateButtonVisibility()
+
+                    addMedicineButton.setOnClickListener {
+                        (activity as? MainActivity)?.replaceFragment(QRCameraFragment())
+                    }
 
                     // Set click listener for delete button
                     deletePrescriptionButton.setOnClickListener {
