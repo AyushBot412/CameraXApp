@@ -215,8 +215,26 @@ class ExpDateFragment : Fragment() {
             timer.cancel()
             viewModel.setExpDate(date)
             // create toast for success, then after like 2 seconds reroute to instructions fragment
-            Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireContext(), "Success ✅", Toast.LENGTH_SHORT).show()
+            // Inflate the custom layout
+            val inflater = layoutInflater
+//            val layout: View = inflater.inflate(R.layout.custom_toast, null)
 
+
+            // Find the TextView and set the message
+
+
+            // Create the Toast
+            val toast = Toast(requireContext())
+            toast.apply{
+                val layout: View = inflater.inflate(R.layout.custom_toast, null)
+//                val text: TextView = layout.findViewById(R.id.custom_toast_message)
+//                text.text = "Exp. Date Captured"
+                duration = Toast.LENGTH_SHORT
+                view = layout
+                show()
+
+            }
             val transaction = parentFragmentManager.beginTransaction()
             transaction.replace(R.id.frame_layout, instructionsFragment)
             transaction.addToBackStack(null)
