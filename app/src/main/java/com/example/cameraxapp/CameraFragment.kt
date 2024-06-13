@@ -114,7 +114,6 @@ open class CameraFragment : Fragment() {
 
     private class YourImageAnalyzer(
         private val displayText : TextView,
-        //private var t1 : TextToSpeech?,
         private var previousMedicine : String,
         private var currentMedicine : String,
         private val context: Context,
