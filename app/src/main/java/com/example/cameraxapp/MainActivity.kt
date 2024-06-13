@@ -2,13 +2,12 @@ package com.example.cameraxapp
 
 
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
+import com.example.cameraxapp.QR_Functionality.QRCameraFragment
 import com.example.cameraxapp.databinding.ActivityMainBinding
+import kotlinx.android.synthetic.main.activity_main.bottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -19,11 +18,11 @@ class MainActivity : AppCompatActivity() {
         val view = viewBinding.root
         setContentView(view)
 
-        // define fragments
+
         val bottleScannerButtonFragment : Fragment = BottleScannerButtonFragment()
         val aboutUsFragment : Fragment = AboutUsFragment()
-//        val expDateButtonFragment : Fragment = ExpDateButtonFragment()
-        val QRScannerFragment : Fragment = QRScannerFragment()
+//      val expDateButtonFragment : Fragment = ExpDateButtonFragment()
+        val QRScannerButtonFragment : Fragment = QRScannerButtonFragment()
         val instructionsFragment : Fragment = InstructionsFragment()
 
         // handle navigation selection
@@ -32,9 +31,9 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_bottle_scanner -> fragment = bottleScannerButtonFragment
                 R.id.navigation_about_us -> fragment = aboutUsFragment
-//                R.id.navigation_exp_date -> fragment= expDateButtonFragment
-                R.id.navigation_qr ->fragment= QRScannerFragment
+                R.id.navigation_qr ->fragment= QRScannerButtonFragment
                 R.id.navigation_instructions -> fragment= instructionsFragment
+//              R.id.navigation_exp_date -> fragment= expDateButtonFragment
             }
             replaceFragment(fragment)
             true
@@ -42,11 +41,21 @@ class MainActivity : AppCompatActivity() {
         // set default selection
         viewBinding.bottomNavigationView.selectedItemId = R.id.navigation_bottle_scanner
     }
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frame_layout, fragment)
-        fragmentTransaction.commit()
+
+    fun onQRContentDownloaded() {
+        supportFragmentManager.popBackStack() // Pop the QRCodeScanningFragment off the back stack
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.frame_layout, InstructionsFragment())
+            .commit()
+
+        bottomNavigationView.selectedItemId = R.id.navigation_instructions
+    }
+    fun replaceFragment(fragment: Fragment){
+      supportFragmentManager
+          .beginTransaction()
+          .replace(R.id.frame_layout, fragment)
+          .commit()
     }
 
 }

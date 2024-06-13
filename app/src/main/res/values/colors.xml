@@ -10,6 +10,7 @@
     <color name="pictonBlue">#3FBAD9</color>
     <color name="ourBlue">#FF3FB9D8</color>
     <color name="ourDarkerBlue">#092F42</color>
+    <color name="deleteRed">#B22222</color>
 
     <!--Medication Colors -->
     <color name="ALPHAGAN">#800080</color>
