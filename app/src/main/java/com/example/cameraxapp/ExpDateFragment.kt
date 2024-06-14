@@ -49,7 +49,6 @@ import java.util.Locale
 import java.util.Timer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.camera.core.TorchState
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
 import androidx.fragment.app.activityViewModels
@@ -89,7 +88,7 @@ class ExpDateFragment : Fragment() {
 
     private var isTimedOut: Boolean = false
 
-    private val timer = object: CountDownTimer(5000, 1000) {
+    private val timer = object: CountDownTimer(20000, 1000) {
         override fun onTick(millisUntilFinished: Long) { }
         override fun onFinish() {
             // reached 20 seconds
@@ -213,12 +212,11 @@ class ExpDateFragment : Fragment() {
 //                rotation = 0
 //            }
             var date: String
-            val image = mediaImage?.let { InputImage.fromMediaImage(it, rotationDegrees) }
+            val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
             image?.let {
                 recognizer.process(it)
                     .addOnSuccessListener { visionText ->
                         date = processor.processVisionText(visionText, "exp_date")
-                        Log.w("Rotation:", rotationDegrees.toString())
                         if (date != "No Date Found.") {
 
                             Log.w("Classified Date:", date)
