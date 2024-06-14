@@ -16,7 +16,10 @@ It converts data from the data sources into view items that can be displayed in 
 Expandable Recyclerview has also been created and this class shows two ViewHolders for it.
  */
 
-class Adapter(private val modelList: MutableList<Model>, private val onExpirationButtonClick: (Model) -> Unit) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Adapter(private val modelList: MutableList<Model>,
+              private val onExpirationButtonClick: (Model) -> Unit,
+              private val onDeleteMedicineClick: (Model) -> Unit) :
+RecyclerView.Adapter<Adapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val medicineName: TextView = itemView.findViewById(R.id.medicineNameTextView)
@@ -26,6 +29,7 @@ class Adapter(private val modelList: MutableList<Model>, private val onExpiratio
         val specialInst: TextView = itemView.findViewById(R.id.specialInstructionsTextView)
         val expDate: TextView = itemView.findViewById(R.id.expirationDateTextView)
         val addExpirationDateButton: Button = itemView.findViewById(R.id.expirationDateButton)
+        val deleteMedicineButton : Button = itemView.findViewById(R.id.deleteMedicineButton)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.medicine_list, parent, false)
@@ -43,6 +47,9 @@ class Adapter(private val modelList: MutableList<Model>, private val onExpiratio
         holder.addExpirationDateButton.setOnClickListener {
                 onExpirationButtonClick(model)
             }
+        holder.deleteMedicineButton.setOnClickListener {
+            onDeleteMedicineClick(model)
+        }
 
         // Set the visibility of details layout based on the expand/collapse state
         if (model.isExpanded) {

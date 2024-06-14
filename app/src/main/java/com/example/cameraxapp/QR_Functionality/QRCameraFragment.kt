@@ -120,8 +120,16 @@ class QRCameraFragment : Fragment() {
             )
         }
     private fun initiateDialog(dao: Dao, prescriptionEntities: List<Entity>) {
+
+        var medicineAmountText : String = ""
+        if(prescriptionEntities.size == 1){
+            medicineAmountText = "Medicine"
+        } else if(prescriptionEntities.size > 1){
+            medicineAmountText = "${prescriptionEntities.size} Medicines"
+        }
+
         AlertDialog.Builder(context)
-            .setTitle("Download Instructions?")
+            .setTitle("Add $medicineAmountText?")
             .setCancelable(false)
             .setPositiveButton("Yes") { dialogInterface, _ ->
 
@@ -129,12 +137,13 @@ class QRCameraFragment : Fragment() {
                 lifecycleScope.launch(Dispatchers.IO) {
                     dao.insertPrescription(prescriptionEntities)
                 }
-                Toast.makeText(context, "Instructions Uploaded", Toast.LENGTH_LONG).show()
+
+                Toast.makeText(context, "Added $medicineAmountText", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
                 (activity as? MainActivity)?.onQRContentDownloaded()
             }
             .setNegativeButton("No") { dialogInterface, _ ->
-                Toast.makeText(context, "Instructions not Uploaded", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "$medicineAmountText not Uploaded", Toast.LENGTH_LONG).show()
                 dialogInterface.dismiss()
                 (activity as? MainActivity)?.replaceFragment(QRScannerButtonFragment())
             }.show()

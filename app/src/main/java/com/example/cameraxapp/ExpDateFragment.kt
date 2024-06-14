@@ -30,16 +30,23 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
+import androidx.camera.core.TorchState
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.cameraxapp.databinding.FragmentExpCameraBinding
+import androidx.fragment.app.activityViewModels
+import com.example.cameraxapp.R.drawable.flash_off_icon_background
+import com.example.cameraxapp.R.drawable.flash_on_icon_background
+import com.example.cameraxapp.databinding.FragmentCameraBinding
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import kotlinx.coroutines.*
 import java.util.Locale
+import java.util.Timer
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.camera.core.TorchState
@@ -54,6 +61,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
+
+
 class ExpDateFragment : Fragment() {
     private lateinit var viewBinding: FragmentExpCameraBinding
     val instructionsFragment : Fragment = InstructionsFragment()
@@ -64,8 +73,8 @@ class ExpDateFragment : Fragment() {
 
     private var t1: TextToSpeech? = null
 
-    private var currentMedicine : String = ""
 
+    private var currentMedicine : String = ""
     private var camera: Camera? = null
     private var cameraInformation: CameraInfo? = null
     private var maxZoomRatio: Float = 1f
@@ -93,6 +102,7 @@ class ExpDateFragment : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -113,6 +123,10 @@ class ExpDateFragment : Fragment() {
             // Turn torch on when the button is clicked
             toggleTorch()
         }
+
+
+
+
 
         //Request camera permissions
         if (allPermissionsGranted()) {
@@ -167,8 +181,11 @@ class ExpDateFragment : Fragment() {
 
         BottleDictionary.initialize()
 
+
         return viewBinding.root
     }
+
+
 
     inner class YourImageAnalyzer(
         private val displayText: TextView,
@@ -187,12 +204,21 @@ class ExpDateFragment : Fragment() {
 //            // Initializing the Image Recognition Inferencer
             val inferencer = InferenceLocal()
 
+
+            //Change Later
+//            if (rotation == 0){
+//                rotation = 90
+//            }
+//            else if (rotation == 90){
+//                rotation = 0
+//            }
             var date: String
-            val image = mediaImage?.let { InputImage.fromMediaImage(it, 0) }
+            val image = mediaImage?.let { InputImage.fromMediaImage(it, rotationDegrees) }
             image?.let {
                 recognizer.process(it)
                     .addOnSuccessListener { visionText ->
                         date = processor.processVisionText(visionText, "exp_date")
+                        Log.w("Rotation:", rotationDegrees.toString())
                         if (date != "No Date Found.") {
 
                             Log.w("Classified Date:", date)
@@ -206,6 +232,9 @@ class ExpDateFragment : Fragment() {
                         imageProxy.close()
                     }
             }
+
+
+
         }
         fun setExpDate(date: String) {
             if (isTimedOut) {
@@ -260,7 +289,10 @@ class ExpDateFragment : Fragment() {
 //                parentFragmentManager.popBackStack()
 //            }, 2000)
         }
+
+
     }
+
 
     private fun startCamera() {
 
@@ -438,6 +470,8 @@ class ExpDateFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // Timer Code
+//        timer.cancel();
         cameraExecutor.shutdown()
     }
 
@@ -456,6 +490,17 @@ class ExpDateFragment : Fragment() {
             }
         }
     }
+
+    //Timer Code
+//    private fun getTimer(): Timer {
+//        return timer("rotation_clock", daemon = true, initialDelay = 3000L, period = 3000L) {
+//            if (rotationDegrees == 180) {
+//                rotationDegrees = 0
+//            } else {
+//                rotationDegrees = 180
+//            }
+//        };
+//    }
 
     companion object {
         private const val TAG = "CameraXApp"
