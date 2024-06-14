@@ -138,6 +138,7 @@
         android:paddingEnd="20dp"
         android:text="No Date Scanned"
         android:textSize="20sp"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expirationDateLabelTextView"/>
 
