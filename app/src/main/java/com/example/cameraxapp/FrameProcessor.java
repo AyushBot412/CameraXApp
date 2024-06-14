@@ -94,7 +94,21 @@ public class FrameProcessor {
             add("DEC");
         }};
 
-        List<String> moList = new ArrayList<>(monthSet);
+        List<String> moList = new ArrayList<>();
+
+        // Add month strings to the ArrayList
+        moList.add("JAN");
+        moList.add("FEB");
+        moList.add("MAR");
+        moList.add("APR");
+        moList.add("MAY");
+        moList.add("JUN");
+        moList.add("JUL");
+        moList.add("AUG");
+        moList.add("SEP");
+        moList.add("OCT");
+        moList.add("NOV");
+        moList.add("DEC");
 
         if (currLine.length() == 2)
         {
@@ -113,6 +127,7 @@ public class FrameProcessor {
 //                Month[] months = Month.values();
 
                 if (monthInt >= 1 && monthInt <= 12){
+                    Log.w("MonthInt", String.valueOf(monthInt));
                     return(moList.get(monthInt - 1));//[monthInt - 1].toString());
                 }
             }
