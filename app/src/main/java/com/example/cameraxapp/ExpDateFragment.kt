@@ -6,13 +6,17 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
@@ -31,6 +35,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.cameraxapp.databinding.FragmentExpCameraBinding
 import androidx.fragment.app.activityViewModels
 import com.example.cameraxapp.R.drawable.flash_off_icon_background
 import com.example.cameraxapp.R.drawable.flash_on_icon_background
@@ -59,7 +64,8 @@ import kotlinx.coroutines.withContext
 
 
 class ExpDateFragment : Fragment() {
-    private lateinit var viewBinding: FragmentCameraBinding
+    private lateinit var viewBinding: FragmentExpCameraBinding
+    val instructionsFragment : Fragment = InstructionsFragment()
     private var imageCapture: ImageCapture? = null
     private val viewModel: SharedViewModel by activityViewModels()
 
@@ -77,13 +83,33 @@ class ExpDateFragment : Fragment() {
 
     private lateinit var dao: Dao
 
+    private lateinit var retryButton: Button
+    private lateinit var conditionalLayout: View
+    private lateinit var dimOverlayView: View
+
+    private var isTimedOut: Boolean = false
+
+    private val timer = object: CountDownTimer(5000, 1000) {
+        override fun onTick(millisUntilFinished: Long) { }
+        override fun onFinish() {
+            // reached 20 seconds
+            Log.w("timer test", "asdf")
+
+            conditionalLayout.visibility = VISIBLE
+            dimOverlayView.visibility = VISIBLE
+            isTimedOut = true
+
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        viewBinding =  FragmentCameraBinding.inflate(inflater, container, false)
+        viewBinding =  FragmentExpCameraBinding.inflate(inflater, container, false)
+        val rootView = viewBinding.root
 
         t1 = TextToSpeech(activity) {
             if (it != TextToSpeech.ERROR) {
@@ -101,6 +127,7 @@ class ExpDateFragment : Fragment() {
 
 
 
+
         //Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
@@ -112,6 +139,24 @@ class ExpDateFragment : Fragment() {
             }
             startCamera()
         }
+
+        conditionalLayout = rootView.findViewById(R.id.conditionalLayout)
+        retryButton = conditionalLayout.findViewById(R.id.conditionalButton)
+        dimOverlayView = rootView.findViewById(R.id.dimOverlay)
+
+        retryButton.setOnClickListener {
+            Log.w("retry button", "clicked")
+
+            // reset timer to 0
+            startTimer()
+            // set dim to false
+
+            isTimedOut = false
+            conditionalLayout.visibility = INVISIBLE
+            dimOverlayView.visibility = INVISIBLE
+        }
+
+        startTimer()
 
         val application = requireActivity().application as AppApplication
         dao = application.db.Dao()
@@ -192,7 +237,57 @@ class ExpDateFragment : Fragment() {
 
         }
         fun setExpDate(date: String) {
+            if (isTimedOut) {
+                // dont do popup
+                return
+            }
+            timer.cancel()
             viewModel.setExpDate(date)
+            // create toast for success, then after like 2 seconds reroute to instructions fragment
+//            Toast.makeText(requireContext(), "Success ✅", Toast.LENGTH_SHORT).show()
+            // Inflate the custom layout
+            val inflater = layoutInflater
+//            val layout: View = inflater.inflate(R.layout.custom_toast, null)
+
+
+            // Find the TextView and set the message
+
+
+            // Create the Toast
+            val toast = Toast(requireContext())
+            toast.apply{
+                val layout: View = inflater.inflate(R.layout.custom_toast, null)
+//                val text: TextView = layout.findViewById(R.id.custom_toast_message)
+//                text.text = "Exp. Date Captured"
+                duration = Toast.LENGTH_SHORT
+                view = layout
+                show()
+
+            }
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.frame_layout, instructionsFragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                // Navigate back to the previous fragment
+//
+//            }, 2000)
+
+
+
+//            val count = parentFragmentManager.backStackEntryCount
+//            Log.d("BackStack", "Total Entries: $count")
+//            for (i in 0 until count) {
+//                val entry = parentFragmentManager.getBackStackEntryAt(i)
+//                Log.d("BackStack", "Entry $i: ${entry.name}")
+//            }
+
+
+            // (go back previous fragment state)
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                // Navigate back to the previous fragment
+//                parentFragmentManager.popBackStack()
+//            }, 2000)
         }
 
 
@@ -286,6 +381,8 @@ class ExpDateFragment : Fragment() {
 
     }
 
+
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpTapToFocusAndPinchToZoom(cameraControl: CameraControl, cameraInfo: CameraInfo?) {
 
@@ -359,6 +456,13 @@ class ExpDateFragment : Fragment() {
         }
     }
 
+    private fun startTimer() {
+        timer.start()
+    }
+
+    private fun stopTimer() {
+        timer.cancel()
+    }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         activity?.let { it1 -> ContextCompat.checkSelfPermission(it1.baseContext, it) } == PackageManager.PERMISSION_GRANTED
