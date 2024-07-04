@@ -473,6 +473,7 @@ class ExpDateFragment : Fragment() {
         cameraExecutor.shutdown()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<String>, grantResults:
         IntArray) {

@@ -1,9 +1,11 @@
 plugins {
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android-extensions'
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+
 }
 
 android {
@@ -30,9 +32,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-//    kotlinOptions {
-//        jvmTarget = '1.8'
-//    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     buildFeatures {
         viewBinding true
 
@@ -94,6 +96,15 @@ dependencies {
 
     // QR
     implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
+
+    //Firebase
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+
+    //Firebase Crashlytics
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
 
 }

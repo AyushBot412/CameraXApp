@@ -5,9 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.cameraxapp.QR_Functionality.QRScannerButtonFragment
-import com.example.cameraxapp.QR_Functionality.QRCameraFragment
 import com.example.cameraxapp.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.bottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
@@ -49,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.frame_layout, InstructionsFragment())
             .commit()
 
-        bottomNavigationView.selectedItemId = R.id.navigation_instructions
+        viewBinding.bottomNavigationView.selectedItemId = R.id.navigation_instructions
     }
     fun replaceFragment(fragment: Fragment){
       supportFragmentManager

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "783163187817",
+    "project_id": "uceye---bottle-identifier",
+    "storage_bucket": "uceye---bottle-identifier.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783163187817:android:70540065b38116b17cb8f8",
+        "android_client_info": {
+          "package_name": "com.LinResearch.cameraxapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYKwREL8c_kQ8ZOyy5xa7J6UAt4Hz16xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
